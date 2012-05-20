@@ -41,7 +41,7 @@ namespace LCR
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            //Set to 720p
+            //Set to  720p
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
