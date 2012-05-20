@@ -14,10 +14,17 @@ namespace LCR
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        //temp for testing
+        Texture2D m_spriteTexture;//holds texture from content
+        Vector2 m_position = Vector2.Zero;
+        //end temp
+
 
         public Game1()
         {
@@ -34,6 +41,11 @@ namespace LCR
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            //Set to 720p
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
+
 
             base.Initialize();
         }
@@ -48,6 +60,8 @@ namespace LCR
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            m_spriteTexture = this.Content.Load<Texture2D>("sprites/mallgirls");
+            //end test
         }
 
         /// <summary>
@@ -84,6 +98,11 @@ namespace LCR
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(m_spriteTexture, m_position, Color.White);
+            spriteBatch.End();
+            //end test code
 
             base.Draw(gameTime);
         }
