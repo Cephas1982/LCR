@@ -23,13 +23,18 @@ namespace LCR
         //temp for testing
         Texture2D m_spriteTexture;//holds texture from content
         Vector2 m_position = Vector2.Zero;
+        
         //end temp
-
+        C_Maps MapSystem;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            //show the mouse
+            IsMouseVisible = true;
+ 
         }
 
         /// <summary>
@@ -39,14 +44,17 @@ namespace LCR
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {
+        {           
+            
             // TODO: Add your initialization logic here
             //Set to  720p
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
 
-
+            //init our classes
+            MapSystem = new C_Maps();
+            Mouse.WindowHandle = this.Window.Handle;//let mouse know window size/position
             base.Initialize();
         }
 
@@ -60,7 +68,15 @@ namespace LCR
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            m_spriteTexture = this.Content.Load<Texture2D>("sprites/mallgirls");
+            m_spriteTexture = this.Content.Load<Texture2D>("sprites/buildings");//todo: function to load from file
+
+            
+
+            //load fonts
+            SpriteFont font1 = this.Content.Load<SpriteFont>("Courier New");
+
+
+            MapSystem.Load(graphics, font1);
             //end test
         }
 
@@ -81,10 +97,14 @@ namespace LCR
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // TODO: Add your update logic here
+            
+            MapSystem.Update();
+            //end our logic
 
             base.Update(gameTime);
         }
@@ -102,6 +122,8 @@ namespace LCR
             spriteBatch.Begin();
             spriteBatch.Draw(m_spriteTexture, m_position, Color.White);
             spriteBatch.End();
+
+            MapSystem.Draw();
             //end test code
 
             base.Draw(gameTime);
