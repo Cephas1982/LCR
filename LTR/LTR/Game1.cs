@@ -9,20 +9,32 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace LTR
+namespace LTR//will change to LTR at some point 
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    
+    public class LTR : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+        //temp for testing
+        Texture2D m_spriteTexture;//holds texture from content
+        Vector2 m_position = Vector2.Zero;
+        
+        //end temp
+        C_Maps MapSystem;
+
+        public LTR()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            //show the mouse
+            IsMouseVisible = true;
+ 
         }
 
         /// <summary>
@@ -32,9 +44,17 @@ namespace LTR
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {
+        {           
+            
             // TODO: Add your initialization logic here
+            //Set to  720p
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
 
+            //init our classes
+            MapSystem = new C_Maps();
+            Mouse.WindowHandle = this.Window.Handle;//let mouse know window size/position
             base.Initialize();
         }
 
@@ -48,6 +68,16 @@ namespace LTR
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            m_spriteTexture = this.Content.Load<Texture2D>("sprites/buildings");//todo: function to load from file
+
+            
+
+            //load fonts
+            SpriteFont font1 = this.Content.Load<SpriteFont>("Courier New");
+
+
+            MapSystem.Load(graphics, font1);
+            //end test
         }
 
         /// <summary>
@@ -66,11 +96,15 @@ namespace LTR
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            // Allows the game to exit  TODO: function to handle inputs
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // TODO: Add your update logic here
+            
+            MapSystem.Update();
+            //end our logic
 
             base.Update(gameTime);
         }
@@ -84,6 +118,13 @@ namespace LTR
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            spriteBatch.Begin();//TODO: remove these 3 lines
+            spriteBatch.Draw(m_spriteTexture, m_position, Color.White);
+            spriteBatch.End();
+
+            MapSystem.Draw();
+            //end test code
 
             base.Draw(gameTime);
         }
