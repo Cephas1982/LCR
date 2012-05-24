@@ -9,49 +9,20 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace LTR//will change to LTR at some point 
+namespace LTR_Character_Editor
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    
-    public class LTR : Microsoft.Xna.Framework.Game
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
-        static Game instance;//singleton so we can access LTR from subclasses
-
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        //temp for testing
-        Texture2D m_spriteTexture;//holds texture from content
-        Vector2 m_position = Vector2.Zero;
-        
-        //end temp
-        C_Maps MapSystem;
-
-        //FYI: borrowed code below
-        // By preloading any assets used by UI rendering, we avoid framerate glitches
-        // when they suddenly need to be loaded in the middle of a menu transition.
-        static readonly string[] preloadAssets =
+        public Game1()
         {
-            "gradient", "Courier New", 
-        };
-
-        public LTR()
-        {
-            instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-            //show the mouse
-            IsMouseVisible = true;
- 
-        }
-
-        //singleton class to access LTR variables throughout menus
-        public static Game Instance
-        {
-            get { return instance; }
         }
 
         /// <summary>
@@ -61,17 +32,9 @@ namespace LTR//will change to LTR at some point
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {           
-            
+        {
             // TODO: Add your initialization logic here
-            //Set to  720p
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
-            graphics.ApplyChanges();
 
-            //init our classes
-            MapSystem = new C_Maps();
-            Mouse.WindowHandle = this.Window.Handle;//let mouse know window size/position
             base.Initialize();
         }
 
@@ -84,6 +47,7 @@ namespace LTR//will change to LTR at some point
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -102,15 +66,11 @@ namespace LTR//will change to LTR at some point
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit  TODO: function to handle inputs
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
             // TODO: Add your update logic here
-            
-          //  MapSystem.Update();  moved to map editor project
-            //end our logic
 
             base.Update(gameTime);
         }

@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTR", "LTR\LTR\LTR.csproj", "{686C5D9F-C080-407E-ABDD-000CB381AE18}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "LTRContent", "LTR\LTRContent\LTRContent.contentproj", "{04219C22-4814-4A0E-98C6-420AE335F494}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTRContent", "LTR\LTRContent\LTRContent.contentproj", "{04219C22-4814-4A0E-98C6-420AE335F494}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTR Map Editor", "LTR Map Editor\LTR Map Editor\LTR Map Editor.csproj", "{C61B8BDC-9899-4184-9B84-3998FBE96F69}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "LTR Map EditorContent", "LTR Map Editor\LTR Map EditorContent\LTR Map EditorContent.contentproj", "{441E04CB-95AF-4D35-B032-1ABDED2F0006}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTR Character Editor", "LTR Character Editor\LTR Character Editor\LTR Character Editor.csproj", "{B03C54A6-9943-45FE-9EFA-6BF2B8B2B29C}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "LTR Character EditorContent", "LTR Character Editor\LTR Character EditorContent\LTR Character EditorContent.contentproj", "{5A40CB2A-4478-452E-87C2-FAE193338F9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +25,18 @@ Global
 		{686C5D9F-C080-407E-ABDD-000CB381AE18}.Release|x86.Build.0 = Release|x86
 		{04219C22-4814-4A0E-98C6-420AE335F494}.Debug|x86.ActiveCfg = Debug|x86
 		{04219C22-4814-4A0E-98C6-420AE335F494}.Release|x86.ActiveCfg = Release|x86
+		{C61B8BDC-9899-4184-9B84-3998FBE96F69}.Debug|x86.ActiveCfg = Debug|x86
+		{C61B8BDC-9899-4184-9B84-3998FBE96F69}.Debug|x86.Build.0 = Debug|x86
+		{C61B8BDC-9899-4184-9B84-3998FBE96F69}.Release|x86.ActiveCfg = Release|x86
+		{C61B8BDC-9899-4184-9B84-3998FBE96F69}.Release|x86.Build.0 = Release|x86
+		{441E04CB-95AF-4D35-B032-1ABDED2F0006}.Debug|x86.ActiveCfg = Debug|x86
+		{441E04CB-95AF-4D35-B032-1ABDED2F0006}.Release|x86.ActiveCfg = Release|x86
+		{B03C54A6-9943-45FE-9EFA-6BF2B8B2B29C}.Debug|x86.ActiveCfg = Debug|x86
+		{B03C54A6-9943-45FE-9EFA-6BF2B8B2B29C}.Debug|x86.Build.0 = Debug|x86
+		{B03C54A6-9943-45FE-9EFA-6BF2B8B2B29C}.Release|x86.ActiveCfg = Release|x86
+		{B03C54A6-9943-45FE-9EFA-6BF2B8B2B29C}.Release|x86.Build.0 = Release|x86
+		{5A40CB2A-4478-452E-87C2-FAE193338F9D}.Debug|x86.ActiveCfg = Debug|x86
+		{5A40CB2A-4478-452E-87C2-FAE193338F9D}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

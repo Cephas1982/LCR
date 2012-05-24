@@ -9,13 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace LTR//will change to LTR at some point 
+namespace LTR_ME//will change to LTR at some point 
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    
-    public class LTR : Microsoft.Xna.Framework.Game
+
+    public class LTR_ME : Microsoft.Xna.Framework.Game
     {
         static Game instance;//singleton so we can access LTR from subclasses
 
@@ -25,7 +25,7 @@ namespace LTR//will change to LTR at some point
         //temp for testing
         Texture2D m_spriteTexture;//holds texture from content
         Vector2 m_position = Vector2.Zero;
-        
+
         //end temp
         C_Maps MapSystem;
 
@@ -34,10 +34,10 @@ namespace LTR//will change to LTR at some point
         // when they suddenly need to be loaded in the middle of a menu transition.
         static readonly string[] preloadAssets =
         {
-            "gradient", "Courier New", 
+            "gradient", "Courier New", "Sprites/buildings",
         };
 
-        public LTR()
+        public LTR_ME()
         {
             instance = this;
             graphics = new GraphicsDeviceManager(this);
@@ -45,7 +45,7 @@ namespace LTR//will change to LTR at some point
 
             //show the mouse
             IsMouseVisible = true;
- 
+
         }
 
         //singleton class to access LTR variables throughout menus
@@ -61,8 +61,8 @@ namespace LTR//will change to LTR at some point
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {           
-            
+        {
+
             // TODO: Add your initialization logic here
             //Set to  720p
             graphics.PreferredBackBufferWidth = 1280;
@@ -84,6 +84,12 @@ namespace LTR//will change to LTR at some point
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // TODO: use singleton to access LTR content pipeline
+            m_spriteTexture = this.Content.Load<Texture2D>("sprites/buildings");//todo: function to load from file
+
+
+            MapSystem.Load();
+            //end test
         }
 
         /// <summary>
@@ -108,8 +114,8 @@ namespace LTR//will change to LTR at some point
                 this.Exit();
 
             // TODO: Add your update logic here
-            
-          //  MapSystem.Update();  moved to map editor project
+
+            MapSystem.Update();
             //end our logic
 
             base.Update(gameTime);
@@ -124,6 +130,13 @@ namespace LTR//will change to LTR at some point
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            spriteBatch.Begin();//TODO: remove these 3 lines
+            spriteBatch.Draw(m_spriteTexture, m_position, Color.White);
+            spriteBatch.End();
+
+            MapSystem.Draw();
+            //end test code
 
             base.Draw(gameTime);
         }
