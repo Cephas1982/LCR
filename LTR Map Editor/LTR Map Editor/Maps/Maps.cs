@@ -22,7 +22,7 @@ namespace LTR_ME
 
         private String m_mouseText;
         private int m_mouseX, m_mouseY;
-        private Boolean m_leftMouseDown, m_rightMouseDown;
+        private Boolean m_leftMouseDown = false, m_rightMouseDown = false;//lol, you can do this in C#?
         
         private Texture2D m_background;//TODO: textures needed for this will be listed in a file. So eventually just an array of string will be needed?
 
@@ -55,12 +55,33 @@ namespace LTR_ME
 #region Update
         public void Update()//update needed while mapeditor active (feeds mouse x/y coords etc)
         {
-            //get mouse position and send to string
-            MouseState ms = Mouse.GetState();
+            MouseState ms = Mouse.GetState();//get mouse state
+            //get mouse button states  //TODO put this in a function (or mouse class <- sounds better)
+            if (ms.LeftButton == ButtonState.Pressed)
+                m_leftMouseDown = true;
+            else
+                m_leftMouseDown = false;
+
+            if (ms.RightButton == ButtonState.Pressed)
+                m_rightMouseDown = true;
+            else
+                m_rightMouseDown = false;
+
+            //get mouse position and send to string            
             m_mouseX = ms.X;
             m_mouseY = ms.Y;
 
-            m_mouseText = "mouse  " + m_mouseX.ToString() + " | " + m_mouseY.ToString();
+            m_mouseText = "mouse  " + m_mouseX.ToString() + " | " + m_mouseY.ToString();//debug output
+
+            //write code so that when an object is clicked + held. You can drag that object
+            //have a bg object container
+            //collision check if mouse is over object inside above container
+            //when user left clicks
+                //get object mouse is over
+                //while left click held change objects x/y coords (use change of distance from last update, so users can drag from anywhere)
+                //do feint highlight of selected object<-- add later
+                    //if leftclick is down then rightclick pressed - reset to old position
+                    //if leftclick released - stop dragging and save objects new x/y coordinates
         }
 #endregion 
 
