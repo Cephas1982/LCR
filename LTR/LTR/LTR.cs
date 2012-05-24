@@ -17,6 +17,8 @@ namespace LTR//will change to LTR at some point
     
     public class LTR : Microsoft.Xna.Framework.Game
     {
+        static Game instance;//singleton so we can access LTR from subclasses
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -27,14 +29,29 @@ namespace LTR//will change to LTR at some point
         //end temp
         C_Maps MapSystem;
 
+        //FYI: borrowed code below
+        // By preloading any assets used by UI rendering, we avoid framerate glitches
+        // when they suddenly need to be loaded in the middle of a menu transition.
+        static readonly string[] preloadAssets =
+        {
+            "gradient", "Courier New", "Sprites/buildings",
+        };
+
         public LTR()
         {
+            instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             //show the mouse
             IsMouseVisible = true;
  
+        }
+
+        //singleton class to access LTR variables throughout menus
+        public static Game Instance
+        {
+            get { return instance; }
         }
 
         /// <summary>
@@ -67,16 +84,11 @@ namespace LTR//will change to LTR at some point
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // TODO: use singleton to access LTR content pipeline
             m_spriteTexture = this.Content.Load<Texture2D>("sprites/buildings");//todo: function to load from file
 
-            
 
-            //load fonts
-            SpriteFont font1 = this.Content.Load<SpriteFont>("Courier New");
-
-
-            MapSystem.Load(graphics, font1);
+            MapSystem.Load();
             //end test
         }
 

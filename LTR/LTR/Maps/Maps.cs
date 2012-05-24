@@ -21,29 +21,35 @@ namespace LTR
         private SpriteBatch m_spriteBatch;
         private String m_mouseText;
         private int m_mouseX, m_mouseY;
+        private Texture2D m_background;//TODO: textures needed for this will be listed in a file. So eventually just an array of string will be needed?
 
-
+        private Texture2D m_nullTexture;
+        private Color m_bgColor;
+        
+#region Init
         public C_Maps()
         {
             //init stuff here
-            //m_textPosition.X = GraphicsDevice.Viewport.Width / 2; //Vector2.Zero;
-            //m_textPosition.Y = GraphicsDevice.Viewport.Height / 2; //Vector2.Zero;
             m_mousePosition = Vector2.Zero;
             m_font1 = null;
             m_spriteBatch = null;
         }
 
-        public void Load(GraphicsDeviceManager graphics, SpriteFont font)//load map / editor things here
+        public void Load()//load map / editor things here
         {
-            m_spriteBatch = new SpriteBatch(graphics.GraphicsDevice);//gfx 
+            m_spriteBatch = new SpriteBatch(LTR.Instance.GraphicsDevice);//gfx
+            m_bgColor = new Color(0.0f, 0.0f, 0.0f, 0.5f);
             
-
-            m_textPosition.X = graphics.GraphicsDevice.Viewport.Width / 2; 
+            m_textPosition.X = LTR.Instance.GraphicsDevice.Viewport.Width / 2;//set x pos of text
             //m_textPosition.Y = ;
 
-            m_font1 = font;// pass array if multiple fonts needed
+            m_nullTexture = LTR.Instance.Content.Load<Texture2D>("sprites/nullsurface");
+            m_background = LTR.Instance.Content.Load<Texture2D>("sprites/buildings");
+            m_font1 = LTR.Instance.Content.Load<SpriteFont>("Courier New");// font;// pass array if multiple fonts need
         }
+#endregion
 
+#region Update
         public void Update()//update needed while mapeditor active (feeds mouse x/y coords etc)
         {
             //get mouse position and send to string
@@ -53,15 +59,30 @@ namespace LTR
 
             m_mouseText = "mouse  " + m_mouseX.ToString() + " | " + m_mouseY.ToString();
         }
+#endregion 
 
+#region Draw
         public void Draw()
         {
+            Rectangle editor_bg;
+            editor_bg.X = LTR.Instance.GraphicsDevice.Viewport.Width / 2;
+            editor_bg.Y = 0;// LTR.Instance.GraphicsDevice.Viewport.Width / 2;
+            editor_bg.Width = editor_bg.X; // LTR.Instance.GraphicsDevice.Viewport.Width / 2;
+            editor_bg.Height = LTR.Instance.GraphicsDevice.Viewport.Height;
+
+            Vector2 bg_pos = Vector2.Zero;
+
             m_spriteBatch.Begin();
+            m_spriteBatch.Draw(m_background, bg_pos, Color.White);
+            m_spriteBatch.Draw(m_nullTexture, editor_bg, m_bgColor);
             m_spriteBatch.DrawString(m_font1, m_mouseText, m_textPosition, Color.Red);
             m_spriteBatch.End();
-        
+
         }
-    }
+#endregion
 
 
-}
+    }//end class
+
+
+}//end namespace
