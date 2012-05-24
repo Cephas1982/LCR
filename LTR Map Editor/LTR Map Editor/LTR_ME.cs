@@ -27,7 +27,7 @@ namespace LTR_ME//will change to LTR at some point
         Vector2 m_position = Vector2.Zero;
 
         //end temp
-        C_Maps MapSystem;
+        C_MapEditor MapSystem;
 
         //FYI: borrowed code below
         // By preloading any assets used by UI rendering, we avoid framerate glitches
@@ -70,7 +70,7 @@ namespace LTR_ME//will change to LTR at some point
             graphics.ApplyChanges();
 
             //init our classes
-            MapSystem = new C_Maps();
+            MapSystem = new C_MapEditor();
             Mouse.WindowHandle = this.Window.Handle;//let mouse know window size/position
             base.Initialize();
         }

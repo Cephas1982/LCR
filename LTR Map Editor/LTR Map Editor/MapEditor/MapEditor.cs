@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace LTR_ME
 {
-    public class C_Maps : Microsoft.Xna.Framework.Game
+    public class C_MapEditor : Microsoft.Xna.Framework.Game
     {
         //class variables here
         private Vector2 m_mousePosition, m_textPosition;
@@ -28,14 +28,22 @@ namespace LTR_ME
 
         private Texture2D m_nullTexture;
         private Color m_bgColor;
+
+        //container for bg objects
+        private List<C_BackgroundObject> l_bgObjects = new List<C_BackgroundObject>();
         
 #region Init
-        public C_Maps()
+        public C_MapEditor()
         {
             //init stuff here
             m_mousePosition = Vector2.Zero;
             m_font1 = null;
             m_spriteBatch = null;
+
+            //temp data for now TODO: load from file later
+            C_BackgroundObject tempBG = new C_BackgroundObject();
+            tempBG.Rect = new Rectangle(0, 0, 500, 500);
+            l_bgObjects.Add(tempBG);
         }
 
         public void Load()//load map / editor things here
@@ -102,6 +110,11 @@ namespace LTR_ME
             m_spriteBatch.DrawString(m_font1, m_mouseText, m_textPosition, Color.Red);
             m_spriteBatch.End();
 
+            //Go through objects in the list and if it's on the screen draw it// TODO: check that it's on the screen
+            m_spriteBatch.Begin();
+            foreach (C_BackgroundObject bgObject in l_bgObjects)
+                m_spriteBatch.Draw(m_nullTexture, bgObject.Rect, Color.Red);
+            m_spriteBatch.End();
         }
 #endregion
 
