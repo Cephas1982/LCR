@@ -21,7 +21,8 @@ namespace LTR_ME
         private SpriteBatch m_spriteBatch;
 
         private String m_mouseText;
-        private int m_mouseX, m_mouseY;
+        private int m_mouseX, m_mouseY;//change to vector2
+        private Vector2 m_oldMousePos;//using this to check mouse offset
         private Boolean m_leftMouseDown = false, m_rightMouseDown = false;//lol, you can do this in C#?
         
         private Texture2D m_background;//TODO: textures needed for this will be listed in a file. So eventually just an array of string will be needed?
@@ -67,8 +68,12 @@ namespace LTR_ME
             //get mouse button states  //TODO put this in a function (or mouse class <- sounds better)
             if (ms.LeftButton == ButtonState.Pressed)
                 m_leftMouseDown = true;
-            else
+            else if(ms.LeftButton == ButtonState.Released)
+            {
                 m_leftMouseDown = false;
+                m_oldMousePos.X = ms.X;
+                m_oldMousePos.Y = ms.Y;
+            }
 
             if (ms.RightButton == ButtonState.Pressed)
                 m_rightMouseDown = true;
@@ -93,7 +98,7 @@ namespace LTR_ME
                 Vector2 mousePos;
                 mousePos.X = ms.X;
                 mousePos.Y = ms.Y;
-                l_bgObjects[0].Position = mousePos;
+                l_bgObjects[0].Position = mousePos - m_oldMousePos;
             }
                 //do feint highlight of selected object<-- add later
                     //if leftclick is down then rightclick pressed - reset to old position
