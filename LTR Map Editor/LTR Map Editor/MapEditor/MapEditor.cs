@@ -84,9 +84,17 @@ namespace LTR_ME
             //write code so that when an object is clicked + held. You can drag that object
             //have a bg object container
             //collision check if mouse is over object inside above container
+                        //pretend it's hover overed bgObject
             //when user left clicks
-                //get object mouse is over
+            if (m_leftMouseDown)
+            {
+                //get object mouse is over (pretend its over the object for now, since no collision detection)
                 //while left click held change objects x/y coords (use change of distance from last update, so users can drag from anywhere)
+                Vector2 mousePos;
+                mousePos.X = ms.X;
+                mousePos.Y = ms.Y;
+                l_bgObjects[0].Position = mousePos;
+            }
                 //do feint highlight of selected object<-- add later
                     //if leftclick is down then rightclick pressed - reset to old position
                     //if leftclick released - stop dragging and save objects new x/y coordinates
