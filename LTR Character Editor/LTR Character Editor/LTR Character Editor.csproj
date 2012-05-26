@@ -107,9 +107,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="C_Bone.cs" />
+    <Compile Include="C_Skeleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="LTR_CE.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

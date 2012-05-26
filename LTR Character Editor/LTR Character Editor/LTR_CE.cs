@@ -14,15 +14,27 @@ namespace LTR_Character_Editor
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class LTR_CE : Microsoft.Xna.Framework.Game
     {
+        static Game instance;//singleton so we can access LTR from subclasses
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+
+        C_Skeleton SkeletonSystem;
+        public LTR_CE()
         {
+            instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            SkeletonSystem = new C_Skeleton();
+        }
+
+        //singleton class to access LTR variables throughout menus
+        public static Game Instance
+        {
+            get { return instance; }
         }
 
         /// <summary>
@@ -33,8 +45,9 @@ namespace LTR_Character_Editor
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            // TODO: Add your initialization logic here;
+            SkeletonSystem.Init();
+            
             base.Initialize();
         }
 
@@ -48,6 +61,7 @@ namespace LTR_Character_Editor
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            SkeletonSystem.Load();
         }
 
         /// <summary>
@@ -71,6 +85,7 @@ namespace LTR_Character_Editor
                 this.Exit();
 
             // TODO: Add your update logic here
+            SkeletonSystem.Update();
 
             base.Update(gameTime);
         }
@@ -84,6 +99,7 @@ namespace LTR_Character_Editor
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            SkeletonSystem.Draw();
 
             base.Draw(gameTime);
         }

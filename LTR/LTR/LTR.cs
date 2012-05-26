@@ -23,7 +23,7 @@ namespace LTR//will change to LTR at some point
         SpriteBatch spriteBatch;
 
         //temp for testing
-        Texture2D m_spriteTexture;//holds texture from content
+        //Texture2D m_spriteTexture;//holds texture from content
         Vector2 m_position = Vector2.Zero;
         
         //end temp

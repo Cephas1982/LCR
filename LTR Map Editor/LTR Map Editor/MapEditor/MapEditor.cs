@@ -16,12 +16,13 @@ namespace LTR_ME
     public class C_MapEditor : Microsoft.Xna.Framework.Game
     {
         //class variables here
-        private Vector2 m_mousePosition, m_textPosition;
+        private Vector2 m_textPosition;
         private SpriteFont m_font1;
         private SpriteBatch m_spriteBatch;
 
-        private String m_mouseText;
-        private int m_mouseX, m_mouseY;//change to vector2
+        private String m_mouseText;//debug to display mouse position
+
+        private Vector2 m_mousePosition;//current mouse coordinates
         private Vector2 m_oldMousePos;//using this to check mouse offset
         private Boolean m_leftMouseDown = false, m_rightMouseDown = false;//lol, you can do this in C#?
         
@@ -81,10 +82,8 @@ namespace LTR_ME
                 m_rightMouseDown = false;
 
             //get mouse position and send to string            
-            m_mouseX = ms.X;
-            m_mouseY = ms.Y;
-
-            m_mouseText = "mouse  " + m_mouseX.ToString() + " | " + m_mouseY.ToString();//debug output
+            m_mouseText = "mouse  " + ms.X.ToString() + " | " + ms.Y.ToString();//debug output
+            
 
             //write code so that when an object is clicked + held. You can drag that object
             //have a bg object container
@@ -98,7 +97,11 @@ namespace LTR_ME
                 Vector2 mousePos;
                 mousePos.X = ms.X;
                 mousePos.Y = ms.Y;
-                l_bgObjects[0].Position = mousePos - m_oldMousePos;
+                l_bgObjects[0].Position += mousePos - m_oldMousePos;
+
+                //reset old mouse pos to current
+                m_oldMousePos.X = ms.X;
+                m_oldMousePos.Y = ms.Y;
             }
                 //do feint highlight of selected object<-- add later
                     //if leftclick is down then rightclick pressed - reset to old position

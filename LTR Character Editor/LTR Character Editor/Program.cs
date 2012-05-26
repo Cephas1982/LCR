@@ -10,7 +10,7 @@ namespace LTR_Character_Editor
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = new Game1())
+            using (LTR_CE game = new LTR_CE())
             {
                 game.Run();
             }
