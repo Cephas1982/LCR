@@ -87,30 +87,59 @@ namespace LTR_Character_Editor
 
         public void Load()
         {
-  
-            
-            
-            vertices = new VertexPositionColor[4];
 
             //TODO: this is hard coded now, but will eventually read from file
             C_Bone tempBone = new C_Bone();
-            //tempBone.Name = "test bone!";
-            tempBone.Length = 100;
-            tempBone.Angle = MathHelper.ToRadians(225);
+            tempBone.Name = "head";
+            tempBone.Length = 30;
+            tempBone.Angle = MathHelper.ToRadians(90);
             tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
-                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2 - 200, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
             
             AddChild(null, tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-            
-            
-            //tempBone.Name = "new test bone!";
-            tempBone.Length = 100;
+
+
+            tempBone.Name = "right arm";
+            tempBone.Length = 60;
             tempBone.Angle = MathHelper.ToRadians(0);
             tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
                 LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
 
             AddChild(l_bones[0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
 
+            tempBone.Name = "right forearm";
+            tempBone.Length = 50;
+            tempBone.Angle = MathHelper.ToRadians(45);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[1], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+
+            tempBone.Name = "left arm";
+            tempBone.Length = 60;
+            tempBone.Angle = MathHelper.ToRadians(180);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+
+            tempBone.Name = "left forearm";
+            tempBone.Length = 50;
+            tempBone.Angle = MathHelper.ToRadians(135);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[3], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+
+            tempBone.Name = "torso";
+            tempBone.Length = 100;
+            tempBone.Angle = MathHelper.ToRadians(90);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+
+            vertices = new VertexPositionColor[l_bones.Count() * 2];//2 vertices per bone
             //after reading bone data load vertices
             for (int i = 0; i < l_bones.Count(); i++)
             {
