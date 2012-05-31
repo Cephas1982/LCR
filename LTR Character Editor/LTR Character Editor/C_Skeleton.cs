@@ -20,9 +20,16 @@ namespace LTR_Character_Editor
 //        C_Bone root; //pointer to current root bone (kinda like an iterator)
         private const uint MAX_CHILD_COUNT = 100;
         private Texture2D m_nullTexture;
+        private int m_keyFrame = 0;//keyframe 
+        public const int MAX_CHAR_BONES = 6;//each keyframe contains 6 bones for now. m_keyFrame*MAX_CHAR_BONES is keyframe entry point
 
-        private VertexPositionColor[] vertices;
+        private VertexPositionColor[] vertices;//holds characters vertices for all keyframes
+        VertexPositionColor[] m_drawFrame;//holds current vertices calculated by interpolating keyframes
         BasicEffect basicEffect;
+        int[] i_keyFrame;//keyframe index
+        float[] i_animationTimer;// index --- load from file
+
+        float time, aTime;
 
         public C_Skeleton()
         {  
@@ -87,7 +94,85 @@ namespace LTR_Character_Editor
 
         public void Load()
         {
+            SetFrame1();
 
+            //Load keyframe and animation indices
+            i_keyFrame = new int[vertices.Length / (MAX_CHAR_BONES * 2)];//create index array for each keyframe
+            for (int i = 0; i < i_keyFrame.Length; i++)
+                i_keyFrame[i] = i * MAX_CHAR_BONES * 2;
+
+            i_animationTimer = new float[vertices.Length / (MAX_CHAR_BONES * 2)];
+            //will load from file, testing w/hardcoding now
+            i_animationTimer[0] = .5f;//going from key0 to key1 should take 2 seconds  TODO: better variable name?
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            Vector3 moveSpeed = new Vector3(0, 0, 0);
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                //moveSpeed.X -= 3;
+                time = 0;
+                m_keyFrame = 1;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                //moveSpeed.X += 3;
+                time = 0;
+                m_keyFrame = 0;
+            }
+            
+
+            for(int i = 0; i < vertices.Count(); i++)
+                vertices[i].Position += moveSpeed;
+
+            //offset of draw function is the current keyframe * max bone count * 2(cause 2 vertices per bone)
+            int offset = m_keyFrame * MAX_CHAR_BONES * 2;
+
+            m_drawFrame = new VertexPositionColor[MAX_CHAR_BONES * 2];
+
+            time += (float)gameTime.ElapsedGameTime.Milliseconds/100;
+            
+            //if keyframe is 0, lerp to 1
+            if (m_keyFrame == 0)
+            {
+                float lerpTime;
+                lerpTime = time * i_animationTimer[0];
+                if (time * i_animationTimer[0] > 1)
+                    lerpTime = 1;
+                for (int i = 0; i < 12; i++)
+                {
+                    m_drawFrame[i].Position = Vector3.Lerp(vertices[i + i_keyFrame[0]].Position, vertices[i + i_keyFrame[1]].Position, lerpTime);
+                }
+            }
+            //if keyframe is 1, lerp to 0
+            if (m_keyFrame == 1)
+            {
+                float lerpTime;
+                lerpTime = time * i_animationTimer[0];
+                if (time * i_animationTimer[0] > 1)
+                    lerpTime = 1;
+                for (int i = 0; i < 12; i++)
+                    m_drawFrame[i].Position = Vector3.Lerp(vertices[i + i_keyFrame[1]].Position, vertices[i + i_keyFrame[0]].Position, lerpTime);
+            }
+        }
+
+        public void Draw()
+        {
+
+            //offset of draw function is the current keyframe * max bone count * 2(cause 2 vertices per bone)
+           // int offset = m_keyFrame * MAX_CHAR_BONES * 2;
+            
+
+            //TODO will use vertex buffer later to speed up rendering
+            basicEffect.CurrentTechnique.Passes[0].Apply();
+            LTR_CE.Instance.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineList,
+                m_drawFrame, 0, MAX_CHAR_BONES);
+            
+        }
+
+        public void SetFrame1()
+        {
             //TODO: this is hard coded now, but will eventually read from file
             C_Bone tempBone = new C_Bone();
             tempBone.Name = "head";
@@ -95,7 +180,7 @@ namespace LTR_Character_Editor
             tempBone.Angle = MathHelper.ToRadians(90);
             tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
                 LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2 - 200, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
-            
+
             AddChild(null, tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
 
 
@@ -138,7 +223,62 @@ namespace LTR_Character_Editor
                 LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
 
             AddChild(l_bones[0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+            /////////////////////////////////
+            //NEW FRAME
+            /////////////////////////////////
 
+            //C_Bone tempBone = new C_Bone();
+            tempBone.Name = "head";
+            tempBone.Length = 30;
+            tempBone.Angle = MathHelper.ToRadians(45);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2 - 200, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(null, tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+
+
+            tempBone.Name = "right arm";
+            tempBone.Length = 60;
+            tempBone.Angle = MathHelper.ToRadians(-45);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[MAX_CHAR_BONES + 0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);//todo fix algorithm for key index
+
+            tempBone.Name = "right forearm";
+            tempBone.Length = 50;
+            tempBone.Angle = MathHelper.ToRadians(45);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[MAX_CHAR_BONES + 1], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+
+            tempBone.Name = "left arm";
+            tempBone.Length = 60;
+            tempBone.Angle = MathHelper.ToRadians(180);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[MAX_CHAR_BONES + 0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+
+            tempBone.Name = "left forearm";
+            tempBone.Length = 50;
+            tempBone.Angle = MathHelper.ToRadians(225);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[MAX_CHAR_BONES + 3], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+
+            tempBone.Name = "torso";
+            tempBone.Length = 100;
+            tempBone.Angle = MathHelper.ToRadians(90);
+            tempBone.Position = new Vector3(LTR_CE.Instance.GraphicsDevice.Viewport.Width / 2,
+                LTR_CE.Instance.GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+
+            AddChild(l_bones[MAX_CHAR_BONES + 0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+            
+            
+            
             vertices = new VertexPositionColor[l_bones.Count() * 2];//2 vertices per bone
             //after reading bone data load vertices
             for (int i = 0; i < l_bones.Count(); i++)
@@ -148,30 +288,6 @@ namespace LTR_Character_Editor
                 vertices[i * 2 + 1].Position = l_bones[i].PositionEnd;
                 vertices[i * 2 + 1].Color = Color.Black;
             }
-        }
-
-        public void Update()
-        {
-            Vector3 moveSpeed = new Vector3(0, 0, 0);
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                moveSpeed.X -= 3;
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                moveSpeed.X += 3;
-
-            
-
-            for(int i = 0; i < vertices.Count(); i++)
-                vertices[i].Position += moveSpeed;
-        }
-
-        public void Draw()
-        {
-            
-            //TODO will use vertex buffer later to speed up rendering
-            basicEffect.CurrentTechnique.Passes[0].Apply();
-            LTR_CE.Instance.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineList,
-                vertices, 0, l_bones.Count());
-            
         }
     }
 }

@@ -85,8 +85,9 @@ namespace LTR_Character_Editor
                 this.Exit();
 
             // TODO: Add your update logic here
-            SkeletonSystem.Update();
+            SkeletonSystem.Update(gameTime);
 
+            
             base.Update(gameTime);
         }
 
