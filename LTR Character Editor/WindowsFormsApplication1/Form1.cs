@@ -18,28 +18,49 @@ namespace CharacterEditor
             Bone_listBox.SelectedIndex = 0;
             Animation_listBox.SelectedIndex = 0;
             KeyFrame_listBox.SelectedIndex = 0;
+
         }
 
         private void Bone_listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int selectedBone = 0;
+            ListBox listBox = (ListBox)sender;
 
-            ListBox combo = (ListBox)sender;
+            EditorWindow.selectedBone = listBox.SelectedIndex;
+            Bone_trackBar.Value = (int)EditorWindow.SelectedBoneAngle;
 
-            selectedBone = combo.SelectedIndex;
-            EditorWindow.selectedBone = selectedBone;
+
+            //update stuff when a bone is selected
+            BoneAngle_textBox_AutoUpdate(Bone_trackBar.Value.ToString());
+            
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void BoneAngle_textBox_Update(object sender, KeyPressEventArgs e)
         {
-
+            //todo: write code for when a user inputs value
         }
 
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        //helpers
+        private void BoneAngle_textBox_AutoUpdate(string text)
         {
+            BoneAngle_textBox.Text = text;
+          
+        }
+
+        private void Bone_trackBar_SelectedChanged(object sender, EventArgs e)
+        {
+            TrackBar trackBar = (TrackBar)sender;
+
+            //change angle of the selected bone (will be converted to radians in C_Skeleton)
+            EditorWindow.SelectedBoneAngle = trackBar.Value;
+
+            //reload skeleton
+            EditorWindow.LoadKeyFrames();/// TODO!!! Make function that reloads just the one bone instead of all keyframes
 
         }
 
+        
+
+    
 
     }
 }

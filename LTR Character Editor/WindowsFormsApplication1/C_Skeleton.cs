@@ -39,6 +39,7 @@ namespace CharacterEditor
         Stopwatch timer;
         
         public int selectedBone;//for the editor! if bone is selected it will be stored here
+        public int selectedBoneAngle;//stores angle of currently selected bone
 
         public C_Skeleton()
         {  
@@ -77,9 +78,17 @@ namespace CharacterEditor
                 childBone.Name = "bone " + l_bones.Count().ToString();
 
             l_bones.Add(childBone);
+        }
+
+        public void RedrawBone()
+        {
+          //  l_bones[i_keyFrame[0] + selectedBone];
+            //bool finished = false;
+            //C_Bone tempBone = l_bones[i_keyFrame[0] + selectedBone];
 
 
         }
+
 
         public void DumpTree(C_Bone bone)
         {
@@ -100,12 +109,11 @@ namespace CharacterEditor
             timer = Stopwatch.StartNew();
             time = 0;
 
-            // Hook the idle event to constantly redraw our animation.
-            Application.Idle += delegate { Invalidate(); };
-            
-
             //will load assets here b/c Update() is part of Game class ( not used in winforms)
             Load();
+
+            // Hook the idle event to constantly redraw our animation.
+            Application.Idle += delegate { Invalidate(); };
         }
 
         public void Load()
@@ -122,6 +130,7 @@ namespace CharacterEditor
             i_animationTimer[0] = .1f;//going from key0 to key1 should take 2 seconds  TODO: better variable name?
 
             m_drawFrame = new VertexPositionColor[MAX_CHAR_BONES * 2];//this is the final positon of the model for the current buffer     
+
         }
 
         public new void Update()
@@ -168,34 +177,51 @@ namespace CharacterEditor
 
         }
 
+        public int SelectedBoneAngle
+        {
+            get
+            {
+                if (i_keyFrame == null || l_bones == null)
+                    return 0;
+
+                return (int)MathHelper.ToDegrees(l_bones[i_keyFrame[0] + selectedBone].Angle);//TODO!!!!!!!!!!!! check selected keyframe in editor when returning this value
+            }
+            set
+            {
+                if (i_keyFrame != null && l_bones != null)
+                    l_bones[i_keyFrame[0] + selectedBone].Angle = MathHelper.ToRadians(value);
+            }
+        }
 
         protected override void Draw()
         {           
-            time += (float)timer.Elapsed.Milliseconds /(1000 * 60);
 
-            Update();//Udate function will be called here since winforms cannot use xna.Game.Update                
-            
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-          
             //editor only!! -- when selected
-            for(int i = 0; i < m_drawFrame.Length; i++)
+            for(int i = 0; i < m_drawFrame.Length; i++)//set all vertices to black
                 m_drawFrame[i].Color = Color.Black;
             
-            m_drawFrame[selectedBone * 2].Color = Color.Yellow;
+            m_drawFrame[selectedBone * 2].Color = Color.Yellow;//highlight whatever is selected in the editor
             m_drawFrame[selectedBone * 2 + 1].Color = Color.Yellow;
 
+            selectedBoneAngle = (int)MathHelper.ToDegrees(l_bones[i_keyFrame[0] + selectedBone].Angle);//TODO!!!!!!!!!!!! check selected keyframe in editor when returning this value
 
+
+
+            time += (float)timer.Elapsed.Milliseconds /(1000 * 60);
+            Update();//Udate function will be called here since winforms cannot use xna.Game.Update                
             
-
-            //TODO will use vertex buffer later to speed up rendering
+    
+            //Drawing happens here
+            GraphicsDevice.Clear(Color.CornflowerBlue);//background color
             basicEffect.CurrentTechnique.Passes[0].Apply();
             GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineList,
-                m_drawFrame, 0, MAX_CHAR_BONES);
-            
+                m_drawFrame, 0, MAX_CHAR_BONES);           
         }
 
         public void LoadKeyFrames()
         {
+           
+            
             //TODO: this is hard coded now, but will eventually read from file
             C_Bone tempBone = new C_Bone();
             tempBone.Name = "head";
@@ -405,6 +431,7 @@ namespace CharacterEditor
             AddChild(l_bones[MAX_CHAR_BONES + 9], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
             
             vertices = new VertexPositionColor[l_bones.Count() * 2];//2 vertices per bone
+
             //after reading bone data load vertices
             for (int i = 0; i < l_bones.Count(); i++)
             {
@@ -414,5 +441,7 @@ namespace CharacterEditor
                 vertices[i * 2 + 1].Color = Color.Black;
             }
         }
+
+ 
     }
 }
