@@ -40,6 +40,7 @@ namespace CharacterEditor
         
         public int selectedBone;//for the editor! if bone is selected it will be stored here
         public int selectedBoneAngle;//stores angle of currently selected bone
+        public List<string> animationList;//stores unique animation values
 
         public C_Skeleton()
         {
@@ -72,7 +73,12 @@ namespace CharacterEditor
                 if(i%MAX_CHAR_BONES == 0)
                     writer.Write("///////// NEW KEY /////////////// \r\n");
 
-                writer.Write(l_bones[i].Name + "\r\n");
+                //writer.Write(l_bones[i].AnimatonName);
+                writer.Write(l_bones[i].AnimationName + "\r\n");            //animation name
+                writer.Write(l_bones[i].KeyFrame.ToString() + "\r\n");      //key frame it belongs to
+                
+
+                writer.Write(l_bones[i].Name + "\r\n");                     //Bone Name
                 writer.Write(l_bones[i].Position.X.ToString() + "\r\n");
                 writer.Write(l_bones[i].Position.Y.ToString() + "\r\n");
                 writer.Write(l_bones[i].PositionEnd.X.ToString() + "\r\n");
@@ -80,7 +86,7 @@ namespace CharacterEditor
                 writer.Write(l_bones[i].Length.ToString() + "\r\n");
                 writer.Write(l_bones[i].Angle.ToString() + "\r\n");
                 writer.Write(l_bones[i].ChildCount.ToString() + "\r\n");
-                writer.Write(l_bones[i].ParentNumber.ToString() + "\r\n");
+                writer.Write(l_bones[i].ParentNumber.ToString() + "\r\n");//parent #, ghetto way to determine which bone it connects to
             }
 
             writer.Close();
@@ -137,7 +143,7 @@ namespace CharacterEditor
                 time = 0;
                 m_keyFrame = 0;
             }
-
+            //TODO  ADD a play function of some sort. Will end up removing one of the "if(m_keyframe....)" blocks and adding variables for the i_keyFrame array index
 
             //if keyframe is 0, lerp to 1
             if (m_keyFrame == 0)
@@ -183,6 +189,30 @@ namespace CharacterEditor
                     l_bones[i_keyFrame[0] + selectedBone].Angle = MathHelper.ToRadians(value);
             }
         }
+        public int KeyFrame
+        {
+            get
+            {
+                return m_keyFrame;
+            }
+            set
+            {
+                m_keyFrame = value;
+            }
+        }
+
+        public List<int> GetKeysForAnimation(string animationName)
+        {
+
+            List<int> keyList = new List<int>();
+
+            for (int i = 0; i < l_bones.Count(); i+= MAX_CHAR_BONES)//this function checks the root bone for each keyframe. If it matches the requestion animation
+                if (l_bones[i].AnimationName == animationName)      //the keyframe will be added to the list
+                    keyList.Add(l_bones[i].KeyFrame);
+
+            return keyList;
+        }
+
 
         protected override void Draw()
         {           
@@ -209,10 +239,13 @@ namespace CharacterEditor
                 m_drawFrame, 0, MAX_CHAR_BONES);           
         }
 
+
         public void LoadKeyFrames()
         {
             
             l_bones.Clear();
+            animationList = new List<string>();
+
           
             System.IO.StreamReader reader = new System.IO.StreamReader("testing.txt");
             while(!reader.EndOfStream)
@@ -222,8 +255,11 @@ namespace CharacterEditor
                 Vector3 tempVector = new Vector3(0,0,0);
                 if (l_bones.Count() % MAX_CHAR_BONES == 0)
                     reader.ReadLine();
+                
+                tempBone.AnimationName = reader.ReadLine();//bone animation name
+                tempBone.KeyFrame = int.Parse(reader.ReadLine());
 
-                tempBone.Name = reader.ReadLine();
+                tempBone.Name = reader.ReadLine();//bone name
 
                 tempVector.X = float.Parse(reader.ReadLine());
                 tempVector.Y = float.Parse(reader.ReadLine());
@@ -241,6 +277,16 @@ namespace CharacterEditor
                 
                 if(tempBone.ParentNumber != -1)
                     tempBone.Position = l_bones[tempBone.ParentNumber].PositionEnd;
+
+                //done parsing, time to add stuff
+
+                //see if animation name is listed. If not add it to list
+                bool animationListed = false;
+                for (int i = 0; i < animationList.Count; i++)
+                    if (animationList[i] == tempBone.AnimationName)
+                        animationListed = true;
+                if (!animationListed)
+                    animationList.Add(tempBone.AnimationName);
 
                 AddChild(0, tempBone);
             }

@@ -11,12 +11,14 @@ namespace CharacterEditor
     class C_Bone
     {
 
-        private string m_name;// = new char[30];
+        private string m_name, m_animationName;// bone name, and the animation bone belongs to
         private Vector3 m_position, m_positionEnd;//bone start positon
         private float m_length, m_angle;//bone length and angle (radians)
         private uint m_childCount;//how many child bones does this bone have?
         public const int MAX_CHILD_BONES = 8;//maximum children
         private int m_parentNumber;
+        private int m_keyFrame;//which key this bone belongs to
+        
 
         C_Bone m_parent = null;//reference to parent
         C_Bone[] m_children = null;//reference to children
@@ -29,12 +31,13 @@ namespace CharacterEditor
             m_angle = 0;
             m_childCount = 0;
             m_parentNumber = -1;
+            m_keyFrame = -1;
 
             m_parent = null;
             m_children = new C_Bone[MAX_CHILD_BONES];
         }
 
-        public string Name
+        public string Name//name of bone
         {
             set
             {
@@ -43,6 +46,30 @@ namespace CharacterEditor
             get
             {
                 return m_name;
+            }
+        }
+
+        public string AnimationName//name of animation bone belongs to
+        {
+            set
+            {
+                m_animationName = value;
+            }
+            get
+            {
+                return m_animationName;
+            }
+        }
+
+        public int KeyFrame
+        {
+            set
+            {
+                m_keyFrame = value;
+            }
+            get
+            {
+                return m_keyFrame;
             }
         }
 

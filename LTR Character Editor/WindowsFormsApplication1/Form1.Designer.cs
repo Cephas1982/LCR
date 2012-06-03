@@ -45,6 +45,7 @@
             this.BoneAngle_textBox = new System.Windows.Forms.TextBox();
             this.SaveButton = new System.Windows.Forms.Button();
             this.EditorWindow = new CharacterEditor.C_Skeleton();
+            this.InitEditor_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Bone_trackBar)).BeginInit();
             this.SuspendLayout();
             // 
@@ -84,15 +85,15 @@
             // 
             this.Animation_listBox.FormattingEnabled = true;
             this.Animation_listBox.Items.AddRange(new object[] {
-            "TODO: read these in from file, Gary",
-            "Idle",
-            "Walk",
-            "Run",
-            "Murder"});
+            "Idle -semi working",
+            "Walk - not yet",
+            "Run - not yet",
+            "Murder - not yet"});
             this.Animation_listBox.Location = new System.Drawing.Point(996, 40);
             this.Animation_listBox.Name = "Animation_listBox";
             this.Animation_listBox.Size = new System.Drawing.Size(175, 160);
             this.Animation_listBox.TabIndex = 4;
+            this.Animation_listBox.SelectedIndexChanged += new System.EventHandler(this.Animation_listBox_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -118,6 +119,7 @@
             this.KeyFrame_listBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.KeyFrame_listBox.Size = new System.Drawing.Size(175, 160);
             this.KeyFrame_listBox.TabIndex = 6;
+            this.KeyFrame_listBox.SelectedIndexChanged += new System.EventHandler(this.KeyFrame_listBox_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -223,17 +225,29 @@
             // 
             // EditorWindow
             // 
+            this.EditorWindow.KeyFrame = 1;
             this.EditorWindow.Location = new System.Drawing.Point(1, 1);
             this.EditorWindow.Name = "EditorWindow";
             this.EditorWindow.SelectedBoneAngle = 0;
             this.EditorWindow.Size = new System.Drawing.Size(756, 613);
             this.EditorWindow.TabIndex = 17;
             // 
+            // InitEditor_button
+            // 
+            this.InitEditor_button.Location = new System.Drawing.Point(1318, 591);
+            this.InitEditor_button.Name = "InitEditor_button";
+            this.InitEditor_button.Size = new System.Drawing.Size(75, 23);
+            this.InitEditor_button.TabIndex = 19;
+            this.InitEditor_button.Text = "InitEditor";
+            this.InitEditor_button.UseVisualStyleBackColor = true;
+            this.InitEditor_button.Click += new System.EventHandler(this.InitEditor_button_Clicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1394, 614);
+            this.Controls.Add(this.InitEditor_button);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.EditorWindow);
             this.Controls.Add(this.BoneAngle_textBox);
@@ -278,6 +292,7 @@
         private System.Windows.Forms.ListBox Bone_listBox;
         private System.Windows.Forms.TrackBar Bone_trackBar;
         private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.Button InitEditor_button;
         
     }
 }
