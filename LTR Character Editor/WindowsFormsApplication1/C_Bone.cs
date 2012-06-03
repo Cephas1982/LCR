@@ -5,7 +5,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 
-namespace LTR_Character_Editor
+namespace CharacterEditor
+
 {  
     class C_Bone
     {
