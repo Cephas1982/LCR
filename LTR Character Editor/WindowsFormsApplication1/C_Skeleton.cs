@@ -42,58 +42,49 @@ namespace CharacterEditor
         public int selectedBoneAngle;//stores angle of currently selected bone
 
         public C_Skeleton()
-        {  
-      
+        {
+
         }
 
         //Skeleton functions
-        public void AddChild(C_Bone targetBone, Vector3 position, float angle, float length, string name)
+        public void AddChild(int keyFrame, C_Bone newBone)
         {
-            C_Bone childBone = new C_Bone();//create new bone and update its values before adding to bone list
-            //add child to the target bone (parameter)
-            //child bone holds pointers to the to children and it's single parent (if applicable)
-            if (targetBone == null)
-            {//if no parent
-                childBone.Parent = null;//this is the parent, so parent pointer is null
-                childBone.Position = position; //sets where to start drawing Head
-            }
-            else if (targetBone.ChildCount < MAX_CHILD_COUNT) //if space for child
+            if (newBone.Parent != null && newBone.Parent.ChildCount < MAX_CHILD_COUNT) //if space for child
             {
-                childBone.Parent = targetBone;//set parent
-                targetBone.ChildCount += 1;//increment parents child count
-                childBone.Position = childBone.Parent.PositionEnd;//set x/y and this is relative to the end of parent bone
+                newBone.Parent.ChildCount += 1;//increment parents child count
+                newBone.Position = newBone.Parent.PositionEnd;//set x/y and this is relative to the end of parent bone
             }
-            // TODO: ERROR CHECKING CODE HERE
-                
+           
+            //set data  
+            if (newBone.Name.Length == 0)                
+                newBone.Name = "bone " + l_bones.Count().ToString();
 
-            //set data
-            childBone.Angle = angle;
-            childBone.Length = length;
-            //childBone.Name = name;
-            childBone.ChildCount = 0; //not really needed b/c of C_Bone constructor
-
-            if (name.Length > 0)
-                childBone.Name = name;
-            else
-                childBone.Name = "bone " + l_bones.Count().ToString();
-
-            l_bones.Add(childBone);
-        }
-
-        public void RedrawBone()
-        {
-          //  l_bones[i_keyFrame[0] + selectedBone];
-            //bool finished = false;
-            //C_Bone tempBone = l_bones[i_keyFrame[0] + selectedBone];
-
-
+            l_bones.Add(newBone);
         }
 
 
-        public void DumpTree(C_Bone bone)
+        public void DumpTree()
         {
-            //prints bones hierarchy from given bone
-            //recursively go through nodes
+            System.IO.StreamWriter writer = new System.IO.StreamWriter("testing.txt");            
+            for (int i = 0; i < l_bones.Count(); i++)
+            {
+                //name, position, positionEnd, length, angle, childCount
+                if(i%MAX_CHAR_BONES == 0)
+                    writer.Write("///////// NEW KEY /////////////// \r\n");
+
+                writer.Write(l_bones[i].Name + "\r\n");
+                writer.Write(l_bones[i].Position.X.ToString() + "\r\n");
+                writer.Write(l_bones[i].Position.Y.ToString() + "\r\n");
+                writer.Write(l_bones[i].PositionEnd.X.ToString() + "\r\n");
+                writer.Write(l_bones[i].PositionEnd.Y.ToString() + "\r\n");
+                writer.Write(l_bones[i].Length.ToString() + "\r\n");
+                writer.Write(l_bones[i].Angle.ToString() + "\r\n");
+                writer.Write(l_bones[i].ChildCount.ToString() + "\r\n");
+                writer.Write(l_bones[i].ParentNumber.ToString() + "\r\n");
+            }
+
+            writer.Close();
+            writer.Dispose();
         }
 
         protected override void Initialize()
@@ -220,216 +211,275 @@ namespace CharacterEditor
 
         public void LoadKeyFrames()
         {
-           
             
+            l_bones.Clear();
+          
+            System.IO.StreamReader reader = new System.IO.StreamReader("testing.txt");
+            while(!reader.EndOfStream)
+            {
+                 C_Bone tempBone = new C_Bone();
+                //name, position, positionEnd, length, angle, childCount
+                Vector3 tempVector = new Vector3(0,0,0);
+                if (l_bones.Count() % MAX_CHAR_BONES == 0)
+                    reader.ReadLine();
+
+                tempBone.Name = reader.ReadLine();
+
+                tempVector.X = float.Parse(reader.ReadLine());
+                tempVector.Y = float.Parse(reader.ReadLine());
+                tempBone.Position = tempVector;
+
+                tempVector.X = float.Parse(reader.ReadLine());
+                tempVector.Y = float.Parse(reader.ReadLine());
+                tempBone.PositionEnd = tempVector;
+
+                tempBone.Length = float.Parse(reader.ReadLine());
+                tempBone.Angle = float.Parse(reader.ReadLine());
+                tempBone.ChildCount = uint.Parse(reader.ReadLine());
+
+                tempBone.ParentNumber = int.Parse(reader.ReadLine());
+                
+                if(tempBone.ParentNumber != -1)
+                    tempBone.Position = l_bones[tempBone.ParentNumber].PositionEnd;
+
+                AddChild(0, tempBone);
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+/* 
+            #region HARDCODED
+
+            /////////////////////////////////
+            //NEW FRAME --- KEYFRAME 0
+            /////////////////////////////////
             //TODO: this is hard coded now, but will eventually read from file
             C_Bone tempBone = new C_Bone();
             tempBone.Name = "head";
             tempBone.Length = 30;
             tempBone.Angle = MathHelper.ToRadians(90);
-            //tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-            //    GraphicsDevice.Viewport.Height / 2 - 200, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
-            tempBone.Position = Vector3.Zero;
-
-            AddChild(null, tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            AddChild(0, tempBone);
 
 
+            tempBone = new C_Bone();
             tempBone.Name = "right arm";
             tempBone.Length = 60;
             tempBone.Angle = MathHelper.ToRadians(20);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[0];
+            tempBone.ParentNumber = 0;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone(); 
             tempBone.Name = "right forearm";
             tempBone.Length = 50;
             tempBone.Angle = MathHelper.ToRadians(45);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[1];
+            tempBone.ParentNumber = 1; 
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[1], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "left arm";
             tempBone.Length = 60;
             tempBone.Angle = MathHelper.ToRadians(160);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[0];
+            tempBone.ParentNumber = 0;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "left forearm";
             tempBone.Length = 50;
             tempBone.Angle = MathHelper.ToRadians(135);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[3];
+            tempBone.ParentNumber = 3;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[3], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "torso";//bone 6 or [5]
             tempBone.Length = 100;
             tempBone.Angle = MathHelper.ToRadians(90);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[0];
+            tempBone.ParentNumber = 0;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "left upper leg";
             tempBone.Length = 75;
             tempBone.Angle = MathHelper.ToRadians(120);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[5];
+            tempBone.ParentNumber = 5;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[5], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "left lower leg";//bone 8
             tempBone.Length = 75;
             tempBone.Angle = MathHelper.ToRadians(100);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[6];
+            tempBone.ParentNumber = 6;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[6], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "right upper leg";//bone 9
             tempBone.Length = 75;
-            tempBone.Angle = MathHelper.ToRadians(60);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Angle = MathHelper.ToRadians(60); 
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[5];
+            tempBone.ParentNumber = 5;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[5], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "right lower leg";//bone 10
             tempBone.Length = 75;
-            tempBone.Angle = MathHelper.ToRadians(80);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Angle = MathHelper.ToRadians(80); 
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[8];
+            tempBone.ParentNumber = 8;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[8], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
 
-
+            tempBone = new C_Bone();
             tempBone.Name = "left foot";
             tempBone.Length = 35;
-            tempBone.Angle = MathHelper.ToRadians(180);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Angle = MathHelper.ToRadians(180); 
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[7];
+            tempBone.ParentNumber = 7;
+            AddChild(0, tempBone);
 
-            AddChild(l_bones[7], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
 
-
+            tempBone = new C_Bone();
             tempBone.Name = "right foot";
             tempBone.Length = 35;
             tempBone.Angle = MathHelper.ToRadians(0);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
-
-            AddChild(l_bones[9], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[9];
+            tempBone.ParentNumber = 9;
+            AddChild(0, tempBone);
 
 
             /////////////////////////////////
-            //NEW FRAME
+            //NEW FRAME --- KEYFRAME 1
             /////////////////////////////////
 
-            //C_Bone tempBone = new C_Bone();
+
+            tempBone = new C_Bone();
             tempBone.Name = "head";
             tempBone.Length = 30;
             tempBone.Angle = MathHelper.ToRadians(45);
-            //tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-            //    GraphicsDevice.Viewport.Height / 2 - 200, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
-            tempBone.Position = Vector3.Zero;
-
-            AddChild(null, tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            AddChild(12, tempBone);
 
 
+            tempBone = new C_Bone();
             tempBone.Name = "right arm";
             tempBone.Length = 60;
             tempBone.Angle = MathHelper.ToRadians(-20);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 0];
+            tempBone.ParentNumber = 12 + 0;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);//todo fix algorithm for key index
-
+            tempBone = new C_Bone();
             tempBone.Name = "right forearm";
             tempBone.Length = 50;
             tempBone.Angle = MathHelper.ToRadians(155);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 1];
+            tempBone.ParentNumber = 12 + 1;
+            AddChild(12, tempBone);
+            
 
-            AddChild(l_bones[MAX_CHAR_BONES + 1], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "left arm";
             tempBone.Length = 60;
             tempBone.Angle = MathHelper.ToRadians(155);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 0];
+            tempBone.ParentNumber = 12 + 0;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
 
+            tempBone = new C_Bone();
             tempBone.Name = "left forearm";
             tempBone.Length = 50;
             tempBone.Angle = MathHelper.ToRadians(130);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 3];
+            tempBone.ParentNumber = 12 + 3;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 3], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "torso";
             tempBone.Length = 100;
             tempBone.Angle = MathHelper.ToRadians(90);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 0];
+            tempBone.ParentNumber = 12 + 0;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 0], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "left upper leg";
             tempBone.Length = 75;
             tempBone.Angle = MathHelper.ToRadians(205);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head  5 6 5 8 7 9
+            tempBone.Parent = l_bones[12 + 5];
+            tempBone.ParentNumber = 12 + 5;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 5], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "left ower leg";//bone 8
             tempBone.Length = 75;
             tempBone.Angle = MathHelper.ToRadians(180);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 6];
+            tempBone.ParentNumber = 12 + 6;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 6], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "right upper leg";
             tempBone.Length = 75;
             tempBone.Angle = MathHelper.ToRadians(-45);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 5];
+            tempBone.ParentNumber = 12 + 5;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 5], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
+            tempBone = new C_Bone();
             tempBone.Name = "right lower leg";
             tempBone.Length = 75;
             tempBone.Angle = MathHelper.ToRadians(170);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 8];
+            tempBone.ParentNumber = 12 + 8;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 8], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
-
+            tempBone = new C_Bone();
             tempBone.Name = "left foot";
             tempBone.Length = 35;
             tempBone.Angle = MathHelper.ToRadians(235);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 7];
+            tempBone.ParentNumber = 12 + 7;
+            AddChild(12, tempBone);
 
-            AddChild(l_bones[MAX_CHAR_BONES + 7], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-
-
+            tempBone = new C_Bone();
             tempBone.Name = "right foot";
             tempBone.Length = 35;
             tempBone.Angle = MathHelper.ToRadians(235);
-            tempBone.Position = new Vector3(GraphicsDevice.Viewport.Width / 2,
-                GraphicsDevice.Viewport.Height / 2, 0);//!!!!!!! MUST SET LAST to calculate 2nd vertex
-
-            AddChild(l_bones[MAX_CHAR_BONES + 9], tempBone.Position, tempBone.Angle, tempBone.Length, tempBone.Name);
-            
+            tempBone.Position = Vector3.Zero;// Only matters for root/head
+            tempBone.Parent = l_bones[12 + 9];
+            tempBone.ParentNumber = 12 + 9;
+            AddChild(12, tempBone);
+ #endregion          
+*/
             vertices = new VertexPositionColor[l_bones.Count() * 2];//2 vertices per bone
 
             //after reading bone data load vertices

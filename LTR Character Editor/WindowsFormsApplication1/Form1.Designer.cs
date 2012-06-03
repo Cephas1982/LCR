@@ -43,6 +43,7 @@
             this.Bone_trackBar = new System.Windows.Forms.TrackBar();
             this.button7 = new System.Windows.Forms.Button();
             this.BoneAngle_textBox = new System.Windows.Forms.TextBox();
+            this.SaveButton = new System.Windows.Forms.Button();
             this.EditorWindow = new CharacterEditor.C_Skeleton();
             ((System.ComponentModel.ISupportInitialize)(this.Bone_trackBar)).BeginInit();
             this.SuspendLayout();
@@ -65,6 +66,7 @@
             "right foot"});
             this.Bone_listBox.Location = new System.Drawing.Point(763, 40);
             this.Bone_listBox.Name = "Bone_listBox";
+            this.Bone_listBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.Bone_listBox.Size = new System.Drawing.Size(162, 160);
             this.Bone_listBox.TabIndex = 2;
             this.Bone_listBox.SelectedIndexChanged += new System.EventHandler(this.Bone_listBox_SelectedIndexChanged);
@@ -113,6 +115,7 @@
             "etc"});
             this.KeyFrame_listBox.Location = new System.Drawing.Point(1207, 40);
             this.KeyFrame_listBox.Name = "KeyFrame_listBox";
+            this.KeyFrame_listBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.KeyFrame_listBox.Size = new System.Drawing.Size(175, 160);
             this.KeyFrame_listBox.TabIndex = 6;
             // 
@@ -186,7 +189,8 @@
             this.Bone_trackBar.Maximum = 360;
             this.Bone_trackBar.Minimum = -360;
             this.Bone_trackBar.Name = "Bone_trackBar";
-            this.Bone_trackBar.Size = new System.Drawing.Size(128, 45);
+            this.Bone_trackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.Bone_trackBar.Size = new System.Drawing.Size(45, 395);
             this.Bone_trackBar.TabIndex = 14;
             this.Bone_trackBar.Scroll += new System.EventHandler(this.Bone_trackBar_SelectedChanged);
             // 
@@ -201,11 +205,21 @@
             // 
             // BoneAngle_textBox
             // 
-            this.BoneAngle_textBox.Location = new System.Drawing.Point(897, 209);
+            this.BoneAngle_textBox.Location = new System.Drawing.Point(814, 207);
             this.BoneAngle_textBox.Name = "BoneAngle_textBox";
-            this.BoneAngle_textBox.Size = new System.Drawing.Size(28, 20);
+            this.BoneAngle_textBox.Size = new System.Drawing.Size(55, 20);
             this.BoneAngle_textBox.TabIndex = 16;
             this.BoneAngle_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.BoneAngle_textBox_Update);
+            // 
+            // SaveButton
+            // 
+            this.SaveButton.Location = new System.Drawing.Point(1207, 323);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(175, 23);
+            this.SaveButton.TabIndex = 18;
+            this.SaveButton.Text = "Save Key Frame";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Update);
             // 
             // EditorWindow
             // 
@@ -220,6 +234,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1394, 614);
+            this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.EditorWindow);
             this.Controls.Add(this.BoneAngle_textBox);
             this.Controls.Add(this.button7);
@@ -262,6 +277,7 @@
         private System.Windows.Forms.TextBox BoneAngle_textBox;
         private System.Windows.Forms.ListBox Bone_listBox;
         private System.Windows.Forms.TrackBar Bone_trackBar;
+        private System.Windows.Forms.Button SaveButton;
         
     }
 }

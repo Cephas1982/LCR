@@ -54,8 +54,14 @@ namespace CharacterEditor
             EditorWindow.SelectedBoneAngle = trackBar.Value;
 
             //reload skeleton
-            EditorWindow.LoadKeyFrames();/// TODO!!! Make function that reloads just the one bone instead of all keyframes
+            EditorWindow.DumpTree();
+            EditorWindow.LoadKeyFrames();
 
+        }
+
+        private void SaveButton_Update(object sender, EventArgs e)
+        {
+            EditorWindow.DumpTree();
         }
 
         

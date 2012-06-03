@@ -16,9 +16,10 @@ namespace CharacterEditor
         private float m_length, m_angle;//bone length and angle (radians)
         private uint m_childCount;//how many child bones does this bone have?
         public const int MAX_CHILD_BONES = 8;//maximum children
+        private int m_parentNumber;
 
-        C_Bone m_parent;//reference to parent
-        C_Bone[] m_children;//reference to children
+        C_Bone m_parent = null;//reference to parent
+        C_Bone[] m_children = null;//reference to children
 
         public C_Bone()
         {
@@ -27,6 +28,7 @@ namespace CharacterEditor
             m_length = 0;
             m_angle = 0;
             m_childCount = 0;
+            m_parentNumber = -1;
 
             m_parent = null;
             m_children = new C_Bone[MAX_CHILD_BONES];
@@ -41,6 +43,18 @@ namespace CharacterEditor
             get
             {
                 return m_name;
+            }
+        }
+
+        public int ParentNumber
+        {
+            set
+            {
+                m_parentNumber = value;
+            }
+            get
+            {
+                return m_parentNumber;
             }
         }
 
