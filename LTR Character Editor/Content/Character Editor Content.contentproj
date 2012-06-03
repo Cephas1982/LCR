@@ -42,8 +42,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="testing.txt">
-      <Name>testing</Name>
+    <Content Include="KeyframeData.txt">
+      <Name>KeyframeData</Name>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

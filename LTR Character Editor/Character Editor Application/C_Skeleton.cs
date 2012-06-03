@@ -66,7 +66,7 @@ namespace CharacterEditor
 
         public void DumpTree()
         {
-            System.IO.StreamWriter writer = new System.IO.StreamWriter("../../../Content1/testing.txt");            
+            System.IO.StreamWriter writer = new System.IO.StreamWriter("../../../Content/KeyframeData.txt");            
             for (int i = 0; i < l_bones.Count(); i++)
             {
                 //name, position, positionEnd, length, angle, childCount
@@ -247,7 +247,7 @@ namespace CharacterEditor
             animationList = new List<string>();
 
 
-            System.IO.StreamReader reader = new System.IO.StreamReader("../../../Content1/testing.txt");
+            System.IO.StreamReader reader = new System.IO.StreamReader("../../../Content/KeyframeData.txt");
             while(!reader.EndOfStream)
             {
                  C_Bone tempBone = new C_Bone();
