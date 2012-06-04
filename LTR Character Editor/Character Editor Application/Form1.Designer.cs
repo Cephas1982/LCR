@@ -37,16 +37,23 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.KeyFrame_AddButton = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.Bone_trackBar = new System.Windows.Forms.TrackBar();
             this.button7 = new System.Windows.Forms.Button();
             this.BoneAngle_textBox = new System.Windows.Forms.TextBox();
             this.SaveButton = new System.Windows.Forms.Button();
-            this.EditorWindow = new CharacterEditor.C_Skeleton();
             this.InitEditor_button = new System.Windows.Forms.Button();
+            this.Play_button = new System.Windows.Forms.Button();
+            this.Loop_checkbox = new System.Windows.Forms.CheckBox();
+            this.EditorWindow = new CharacterEditor.C_Skeleton();
+            this.AnimationSpeed_trackbar = new System.Windows.Forms.TrackBar();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.AnimationSpeed_textbox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.Bone_trackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AnimationSpeed_trackbar)).BeginInit();
             this.SuspendLayout();
             // 
             // Bone_listBox
@@ -157,14 +164,15 @@
             this.button3.Text = "Delete Animation";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // KeyFrame_AddButton
             // 
-            this.button4.Location = new System.Drawing.Point(1207, 265);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(175, 23);
-            this.button4.TabIndex = 13;
-            this.button4.Text = "Edit Key Frame";
-            this.button4.UseVisualStyleBackColor = true;
+            this.KeyFrame_AddButton.Location = new System.Drawing.Point(1207, 265);
+            this.KeyFrame_AddButton.Name = "KeyFrame_AddButton";
+            this.KeyFrame_AddButton.Size = new System.Drawing.Size(175, 23);
+            this.KeyFrame_AddButton.TabIndex = 13;
+            this.KeyFrame_AddButton.Text = "Add Key Frame";
+            this.KeyFrame_AddButton.UseVisualStyleBackColor = true;
+            this.KeyFrame_AddButton.Click += new System.EventHandler(this.KeyFrame_Add_Button);
             // 
             // button5
             // 
@@ -223,15 +231,6 @@
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Update);
             // 
-            // EditorWindow
-            // 
-            this.EditorWindow.KeyFrame = 1;
-            this.EditorWindow.Location = new System.Drawing.Point(1, 1);
-            this.EditorWindow.Name = "EditorWindow";
-            this.EditorWindow.SelectedBoneAngle = 0;
-            this.EditorWindow.Size = new System.Drawing.Size(756, 613);
-            this.EditorWindow.TabIndex = 17;
-            // 
             // InitEditor_button
             // 
             this.InitEditor_button.Location = new System.Drawing.Point(1318, 591);
@@ -242,18 +241,87 @@
             this.InitEditor_button.UseVisualStyleBackColor = true;
             this.InitEditor_button.Click += new System.EventHandler(this.InitEditor_button_Clicked);
             // 
+            // Play_button
+            // 
+            this.Play_button.Location = new System.Drawing.Point(996, 303);
+            this.Play_button.Name = "Play_button";
+            this.Play_button.Size = new System.Drawing.Size(75, 23);
+            this.Play_button.TabIndex = 20;
+            this.Play_button.Text = "Play";
+            this.Play_button.UseVisualStyleBackColor = true;
+            this.Play_button.Click += new System.EventHandler(this.Play_button_Clicked);
+            // 
+            // Loop_checkbox
+            // 
+            this.Loop_checkbox.AutoSize = true;
+            this.Loop_checkbox.Location = new System.Drawing.Point(1093, 309);
+            this.Loop_checkbox.Name = "Loop_checkbox";
+            this.Loop_checkbox.Size = new System.Drawing.Size(50, 17);
+            this.Loop_checkbox.TabIndex = 21;
+            this.Loop_checkbox.Text = "Loop";
+            this.Loop_checkbox.UseVisualStyleBackColor = true;
+            // 
+            // EditorWindow
+            // 
+            this.EditorWindow.KeyFrame = 0;
+            this.EditorWindow.Location = new System.Drawing.Point(1, 1);
+            this.EditorWindow.Name = "EditorWindow";
+            this.EditorWindow.SelectedBoneAngle = 0;
+            this.EditorWindow.Size = new System.Drawing.Size(756, 613);
+            this.EditorWindow.TabIndex = 17;
+            // 
+            // AnimationSpeed_trackbar
+            // 
+            this.AnimationSpeed_trackbar.LargeChange = 1;
+            this.AnimationSpeed_trackbar.Location = new System.Drawing.Point(1207, 384);
+            this.AnimationSpeed_trackbar.Name = "AnimationSpeed_trackbar";
+            this.AnimationSpeed_trackbar.Size = new System.Drawing.Size(143, 45);
+            this.AnimationSpeed_trackbar.TabIndex = 22;
+            this.AnimationSpeed_trackbar.Scroll += new System.EventHandler(this.AnimationSpeed_trackbar_Update);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1225, 416);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(114, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "Animation Speed(WIP)";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1027, 575);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(355, 13);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "PRESS INIT BUTTON FIRST TO START - IM ME FOR INSTRUCTIONS";
+            // 
+            // AnimationSpeed_textbox
+            // 
+            this.AnimationSpeed_textbox.Location = new System.Drawing.Point(1346, 384);
+            this.AnimationSpeed_textbox.Name = "AnimationSpeed_textbox";
+            this.AnimationSpeed_textbox.Size = new System.Drawing.Size(36, 20);
+            this.AnimationSpeed_textbox.TabIndex = 25;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1394, 614);
+            this.Controls.Add(this.AnimationSpeed_textbox);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.AnimationSpeed_trackbar);
+            this.Controls.Add(this.Loop_checkbox);
+            this.Controls.Add(this.Play_button);
             this.Controls.Add(this.InitEditor_button);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.EditorWindow);
             this.Controls.Add(this.BoneAngle_textBox);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.Bone_trackBar);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.KeyFrame_AddButton);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button3);
@@ -268,6 +336,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.Bone_trackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AnimationSpeed_trackbar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -284,7 +353,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button KeyFrame_AddButton;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
@@ -293,6 +362,12 @@
         private System.Windows.Forms.TrackBar Bone_trackBar;
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.Button InitEditor_button;
+        private System.Windows.Forms.Button Play_button;
+        private System.Windows.Forms.CheckBox Loop_checkbox;
+        private System.Windows.Forms.TrackBar AnimationSpeed_trackbar;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox AnimationSpeed_textbox;
         
     }
 }

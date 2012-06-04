@@ -24,23 +24,32 @@ namespace CharacterEditor
 //        C_Bone root; //pointer to current root bone (kinda like an iterator)
         private const uint MAX_CHILD_COUNT = 100;
         //private Texture2D m_nullTexture;
-        private int m_keyFrame = 1;//keyframe 
+        private int m_keyFrame = 0;//keyframe 
+        public int m_keyFrame_start, m_keyFrame_end;
         public const int MAX_CHAR_BONES = 12;//each keyframe contains 6 bones for now. m_keyFrame*MAX_CHAR_BONES is keyframe entry point
 
         private VertexPositionColor[] vertices;//holds characters vertices for all keyframes
         VertexPositionColor[] m_drawFrame;//holds current vertices calculated by interpolating keyframes
         BasicEffect basicEffect;
-        int[] i_keyFrame;//keyframe index
-        float[] i_animationTimer;// index --- load from file
+        private int[] i_keyFrame;//keyframe index
+        public float[] i_animationTimer;// index --- load from file
 
-        float time;
+        private float time;
+        private float elapsedAnimationTime;
+        private float currentTime;
+        private bool m_loopAnimation = false;
 
         //must use this for timing. cannot rely on xna gameTimer when imbedded into winforms
         Stopwatch timer;
         
         public int selectedBone;//for the editor! if bone is selected it will be stored here
         public int selectedBoneAngle;//stores angle of currently selected bone
+        public int selectedBoneIndex;//stores which keyframe the bone belongs to
+        public float animationSpeed = 3;//how fast animation plays  TODO/////////////// get rid of this and set animation speed for each keyframe
         public List<string> animationList;//stores unique animation values
+
+        public enum e_AnimationState { PLAY, STOP};
+        private int m_animationState = (int)e_AnimationState.STOP;
 
         public C_Skeleton()
         {
@@ -75,7 +84,7 @@ namespace CharacterEditor
 
                 //writer.Write(l_bones[i].AnimatonName);
                 writer.Write(l_bones[i].AnimationName + "\r\n");            //animation name
-                writer.Write(l_bones[i].KeyFrame.ToString() + "\r\n");      //key frame it belongs to
+                writer.Write((l_bones[i].KeyFrame).ToString() + "\r\n");      //key frame it belongs to
                 
 
                 writer.Write(l_bones[i].Name + "\r\n");                     //Bone Name
@@ -117,14 +126,11 @@ namespace CharacterEditor
         {
             LoadKeyFrames();//hard coded vertices. Will eventually load from file....gary
 
-            //Load keyframe and animation indices
-            i_keyFrame = new int[vertices.Length / (MAX_CHAR_BONES * 2)];//create index array for each keyframe
-            for (int i = 0; i < i_keyFrame.Length; i++)
-                i_keyFrame[i] = i * MAX_CHAR_BONES * 2;
+            
 
-            i_animationTimer = new float[vertices.Length / (MAX_CHAR_BONES * 2)];
+            i_animationTimer = new float[vertices.Length / (MAX_CHAR_BONES * 2)];//todo needeD????
             //will load from file, testing w/hardcoding now
-            i_animationTimer[0] = .1f;//going from key0 to key1 should take 2 seconds  TODO: better variable name?
+            i_animationTimer[0] = animationSpeed;//going from key0 to key1 should take 2 seconds  TODO: better variable name? TODO: FIX THIS
 
             m_drawFrame = new VertexPositionColor[MAX_CHAR_BONES * 2];//this is the final positon of the model for the current buffer     
 
@@ -143,50 +149,72 @@ namespace CharacterEditor
                 time = 0;
                 m_keyFrame = 0;
             }
-            //TODO  ADD a play function of some sort. Will end up removing one of the "if(m_keyframe....)" blocks and adding variables for the i_keyFrame array index
-
-            //if keyframe is 0, lerp to 1
-            if (m_keyFrame == 0)
-            {
-                float lerpTime;
-                lerpTime = time * i_animationTimer[0];
-                if (time * i_animationTimer[0] > 1)
-                    lerpTime = 1;
-                for (int i = 0; i < MAX_CHAR_BONES * 2; i++)
-                {
-                    m_drawFrame[i].Position = Vector3.Lerp(vertices[i + i_keyFrame[0]].Position, vertices[i + i_keyFrame[1]].Position, lerpTime);
-                    m_drawFrame[i].Position = Vector3.Transform(m_drawFrame[i].Position, Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/2 - 100, 0)));
-                }
-            }
-            //if keyframe is 1, lerp to 0
-            if (m_keyFrame == 1)
-            {
-                float lerpTime;
-                lerpTime = time * i_animationTimer[0];
-                if (time * i_animationTimer[0] > 1)
-                    lerpTime = 1;
-                for (int i = 0; i < MAX_CHAR_BONES * 2; i++)
-                {
-                    m_drawFrame[i].Position = Vector3.Lerp(vertices[i + i_keyFrame[1]].Position, vertices[i + i_keyFrame[0]].Position, lerpTime);
-                    m_drawFrame[i].Position = Vector3.Transform(m_drawFrame[i].Position, Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2 - 100, 0)));
-                }
-            }
-
+       
+            
+            Play(m_animationState, m_keyFrame, m_keyFrame_start, m_keyFrame_end, m_loopAnimation);
+  
         }
 
-        public int SelectedBoneAngle
+        public void Play(int state, int keyFrame_current, int keyFrame_start, int keyFrame_end, bool loop)
+        {
+
+            //todo reset elapsed time if stop/play state is changed. This should solve animations not starting from origin
+            if(m_animationState != state)
+                currentTime = timer.ElapsedMilliseconds;//reset the timer if state changes
+
+            m_keyFrame = keyFrame_current;
+            m_keyFrame_start = keyFrame_start;
+            m_keyFrame_end = keyFrame_end;
+            m_animationState = state;
+            m_loopAnimation = loop;
+
+            elapsedAnimationTime = timer.ElapsedMilliseconds - currentTime;
+            elapsedAnimationTime /= 1000;
+
+            float lerpTime;
+            lerpTime = elapsedAnimationTime * i_animationTimer[0];
+            if (elapsedAnimationTime * i_animationTimer[0] > 1)
+            {
+                lerpTime = 1;
+                if (m_animationState != (int)e_AnimationState.STOP)//advance keyframe UNLESS only displaying 1 frame
+                    m_keyFrame++;//advance to next frame
+                currentTime = timer.ElapsedMilliseconds;//reset the timer. this will give a current time to check how much time has passed
+                if (m_keyFrame >= m_keyFrame_end && loop == true)
+                    m_keyFrame = m_keyFrame_start;
+                else if(m_keyFrame == m_keyFrame_end)
+                {
+                    m_keyFrame = m_keyFrame_end;
+                    m_animationState = (int)e_AnimationState.STOP;
+                }
+            }
+            if (m_animationState == (int)e_AnimationState.PLAY)//play state
+                for (int i = 0; i < MAX_CHAR_BONES * 2; i++)
+                {
+                    m_drawFrame[i].Position = Vector3.Lerp(vertices[i + i_keyFrame[m_keyFrame]].Position, vertices[i + i_keyFrame[m_keyFrame + 1]].Position, lerpTime);
+                    m_drawFrame[i].Position = Vector3.Transform(m_drawFrame[i].Position, Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2 - 100, 0)));
+                }
+            if (m_animationState == (int)e_AnimationState.STOP)//stop state
+                for (int i = 0; i < MAX_CHAR_BONES * 2; i++)
+                {
+                    m_drawFrame[i].Position = vertices[i + i_keyFrame[m_keyFrame]].Position;
+                    m_drawFrame[i].Position = Vector3.Transform(m_drawFrame[i].Position, Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2 - 100, 0)));
+                }
+           
+        }
+
+        public int SelectedBoneAngle//todo: change to funciton to idiot proof??
         {
             get
             {
                 if (i_keyFrame == null || l_bones == null)
                     return 0;
 
-                return (int)MathHelper.ToDegrees(l_bones[i_keyFrame[0] + selectedBone].Angle);//TODO!!!!!!!!!!!! check selected keyframe in editor when returning this value
+                return (int)MathHelper.ToDegrees(l_bones[(selectedBoneIndex * MAX_CHAR_BONES) + selectedBone].Angle);//TODO!!!!!!!!!!!! check selected keyframe in editor when returning this value
             }
             set
             {
                 if (i_keyFrame != null && l_bones != null)
-                    l_bones[i_keyFrame[0] + selectedBone].Angle = MathHelper.ToRadians(value);
+                    l_bones[(selectedBoneIndex * MAX_CHAR_BONES) + selectedBone].Angle = MathHelper.ToRadians(value);
             }
         }
         public int KeyFrame
@@ -213,7 +241,6 @@ namespace CharacterEditor
             return keyList;
         }
 
-
         protected override void Draw()
         {           
 
@@ -239,7 +266,51 @@ namespace CharacterEditor
                 m_drawFrame, 0, MAX_CHAR_BONES);           
         }
 
+        public void AddKeyFrame()
+        {
+            int start = l_bones.Count - MAX_CHAR_BONES;//start at first bone of the last keyframe
+            int end = start + MAX_CHAR_BONES;//end at the last bone of the last keyframe
+            
 
+            string name, animationName;// bone name, and the animation bone belongs to
+            Vector3 position, positionEnd;//bone start positon
+            float length, angle;//bone length and angle (radians)
+            uint childCount;//how many child bones does this bone have?
+            int parentNumber;
+            int keyFrame;//which key this bone belongs to
+
+            //copy data from prior keyframe
+            for (int i = start; i < end; i++)
+            {
+                C_Bone tempBone = new C_Bone();
+
+
+                //C# copies by reference. There's a clone function, but for now I'll do this so I don't overwrite data ='(
+                animationName = l_bones[i].AnimationName;
+                keyFrame = l_bones[i].KeyFrame +1;//IMPORTANT because this is the next keyframe
+                name = l_bones[i].Name;
+                position = l_bones[i].Position;
+                positionEnd = l_bones[i].PositionEnd;
+                length = l_bones[i].Length;
+                angle = l_bones[i].Angle;
+                childCount = l_bones[i].ChildCount;
+                parentNumber = l_bones[i].ParentNumber;
+
+                tempBone.AnimationName = animationName;
+                tempBone.KeyFrame = keyFrame;
+                tempBone.Name = name;
+                tempBone.Position = position;
+                tempBone.PositionEnd = positionEnd;
+                tempBone.Length = length;
+                tempBone.Angle = angle;
+                tempBone.ChildCount = childCount;
+                if(parentNumber != -1)
+                    tempBone.ParentNumber = parentNumber + MAX_CHAR_BONES;//also very important. Tells which bone it is attached to;
+
+                AddChild(keyFrame, tempBone);
+            }
+                
+        }
         public void LoadKeyFrames()
         {
             
@@ -294,9 +365,9 @@ namespace CharacterEditor
             reader.Close();
             reader.Dispose();
 
-/* 
+ 
             #region HARDCODED
-
+/*
             /////////////////////////////////
             //NEW FRAME --- KEYFRAME 0
             /////////////////////////////////
@@ -524,8 +595,9 @@ namespace CharacterEditor
             tempBone.Parent = l_bones[12 + 9];
             tempBone.ParentNumber = 12 + 9;
             AddChild(12, tempBone);
+ */
  #endregion          
-*/
+
             vertices = new VertexPositionColor[l_bones.Count() * 2];//2 vertices per bone
 
             //after reading bone data load vertices
@@ -536,6 +608,11 @@ namespace CharacterEditor
                 vertices[i * 2 + 1].Position = l_bones[i].PositionEnd;
                 vertices[i * 2 + 1].Color = Color.Black;
             }
+
+            //Load keyframe and animation indices
+            i_keyFrame = new int[vertices.Length / (MAX_CHAR_BONES * 2)];//create index array for each keyframe
+            for (int i = 0; i < i_keyFrame.Length; i++)
+                i_keyFrame[i] = i * MAX_CHAR_BONES * 2;
         }
 
  
