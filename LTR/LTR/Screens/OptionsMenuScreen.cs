@@ -11,7 +11,7 @@
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace GameStateManagement
+namespace LTR
 {
     /// <summary>
     /// The options screen is brought up over the top of the main menu
@@ -22,26 +22,23 @@ namespace GameStateManagement
     {
         #region Fields
 
-        MenuEntry ungulateMenuEntry;
-        MenuEntry languageMenuEntry;
-        MenuEntry frobnicateMenuEntry;
-        MenuEntry elfMenuEntry;
+        MenuEntry option1;
+        MenuEntry option2;
+        MenuEntry option3;
+        MenuEntry option4;
 
         enum Ungulate
         {
-            BactrianCamel,
-            Dromedary,
-            Llama,
+            White,
+            Asian,
+            Gary
         }
 
-        static Ungulate currentUngulate = Ungulate.Dromedary;
-
-        static string[] languages = { "C#", "French", "Deoxyribonucleic acid" };
+        static Ungulate currentUngulate = Ungulate.White;
+        static string[] languages = { "Pig Latin", "Klingon", "Meskin" };
         static int currentLanguage = 0;
-
-        static bool frobnicate = true;
-
-        static int elf = 23;
+        static bool frobnicate = false;
+        static int time = 15;
 
         #endregion
 
@@ -52,30 +49,30 @@ namespace GameStateManagement
         /// Constructor.
         /// </summary>
         public OptionsMenuScreen()
-            : base("Options")
+            : base("OPTIONS")
         {
             // Create our menu entries.
-            ungulateMenuEntry = new MenuEntry(string.Empty);
-            languageMenuEntry = new MenuEntry(string.Empty);
-            frobnicateMenuEntry = new MenuEntry(string.Empty);
-            elfMenuEntry = new MenuEntry(string.Empty);
+            option1 = new MenuEntry(string.Empty);
+            option2 = new MenuEntry(string.Empty);
+            option3 = new MenuEntry(string.Empty);
+            option4 = new MenuEntry(string.Empty);
 
             SetMenuEntryText();
 
             MenuEntry back = new MenuEntry("Back");
 
             // Hook up menu event handlers.
-            ungulateMenuEntry.Selected += UngulateMenuEntrySelected;
-            languageMenuEntry.Selected += LanguageMenuEntrySelected;
-            frobnicateMenuEntry.Selected += FrobnicateMenuEntrySelected;
-            elfMenuEntry.Selected += ElfMenuEntrySelected;
+            option1.Selected += UngulateMenuEntrySelected;
+            option2.Selected += LanguageMenuEntrySelected;
+            option3.Selected += FrobnicateMenuEntrySelected;
+            option4.Selected += ElfMenuEntrySelected;
             back.Selected += OnCancel;
             
             // Add entries to the menu.
-            MenuEntries.Add(ungulateMenuEntry);
-            MenuEntries.Add(languageMenuEntry);
-            MenuEntries.Add(frobnicateMenuEntry);
-            MenuEntries.Add(elfMenuEntry);
+            MenuEntries.Add(option1);
+            MenuEntries.Add(option2);
+            MenuEntries.Add(option3);
+            MenuEntries.Add(option4);
             MenuEntries.Add(back);
         }
 
@@ -85,10 +82,10 @@ namespace GameStateManagement
         /// </summary>
         void SetMenuEntryText()
         {
-            ungulateMenuEntry.Text = "Preferred ungulate: " + currentUngulate;
-            languageMenuEntry.Text = "Language: " + languages[currentLanguage];
-            frobnicateMenuEntry.Text = "Frobnicate: " + (frobnicate ? "on" : "off");
-            elfMenuEntry.Text = "elf: " + elf;
+            option1.Text = "Preferred prostitue: " + currentUngulate;
+            option2.Text = "Language: " + languages[currentLanguage];
+            option3.Text = "A2M: " + (frobnicate ? "hell yeh" : "no");
+            option4.Text = "Time: " + time + " minits";
         }
 
 
@@ -104,7 +101,7 @@ namespace GameStateManagement
         {
             currentUngulate++;
 
-            if (currentUngulate > Ungulate.Llama)
+            if (currentUngulate > Ungulate.Gary)
                 currentUngulate = 0;
 
             SetMenuEntryText();
@@ -138,8 +135,10 @@ namespace GameStateManagement
         /// </summary>
         void ElfMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            elf++;
+            time += 15;
 
+            if (time > 60)
+                time = 0;
             SetMenuEntryText();
         }
 

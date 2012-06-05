@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace GameStateManagement
+namespace LTR
 {
     /// <summary>
     /// The loading screen coordinates transitions between the menu system and the
@@ -35,6 +35,7 @@ namespace GameStateManagement
 
         bool loadingIsSlow;
         bool otherScreensAreGone;
+        //Texture2D backgroundTexture;
 
         GameScreen[] screensToLoad;
 
@@ -73,6 +74,9 @@ namespace GameStateManagement
                                                             loadingIsSlow,
                                                             screensToLoad);
 
+            //LoadingBackgroundScreen bs = new LoadingBackgroundScreen();
+
+            //screenManager.AddScreen(new LoadingBackgroundScreen(), controllingPlayer);
             screenManager.AddScreen(loadingScreen, controllingPlayer);
         }
 
@@ -100,6 +104,7 @@ namespace GameStateManagement
                 {
                     if (screen != null)
                     {
+                        //ScreenManager.AddScreen(new LoadingBackgroundScreen(), ControllingPlayer);
                         ScreenManager.AddScreen(screen, ControllingPlayer);
                     }
                 }
@@ -139,7 +144,7 @@ namespace GameStateManagement
                 SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
                 SpriteFont font = ScreenManager.Font;
 
-                const string message = "Loading...";
+                const string message = "Loading a shit-load of nothing...";
 
                 // Center the text in the viewport.
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;

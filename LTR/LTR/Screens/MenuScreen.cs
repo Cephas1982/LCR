@@ -16,7 +16,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 #endregion
 
-namespace GameStateManagement
+namespace LTR
 {
     /// <summary>
     /// Base class for screens that contain a menu of options. The user can

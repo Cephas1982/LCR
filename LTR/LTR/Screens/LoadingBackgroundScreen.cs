@@ -21,11 +21,11 @@ namespace LTR
     /// It draws a background image that remains fixed in place regardless
     /// of whatever transitions the screens on top of it may be doing.
     /// </summary>
-    class BackgroundScreen : GameScreen
+    class LoadingBackgroundScreen : GameScreen
     {
         #region Fields
 
-        ContentManager content;
+        ContentManager loadingContent;
         Texture2D backgroundTexture;
 
         #endregion
@@ -36,7 +36,7 @@ namespace LTR
         /// <summary>
         /// Constructor.
         /// </summary>
-        public BackgroundScreen()
+        public LoadingBackgroundScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -52,10 +52,10 @@ namespace LTR
         /// </summary>
         public override void LoadContent()
         {
-            if (content == null)
-                content = new ContentManager(ScreenManager.Game.Services, "Content");
+            if (loadingContent == null)
+                loadingContent = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            backgroundTexture = content.Load<Texture2D>("background");
+            backgroundTexture = loadingContent.Load<Texture2D>("loadingscreenbackground");
         }
 
 
@@ -64,7 +64,7 @@ namespace LTR
         /// </summary>
         public override void UnloadContent()
         {
-            content.Unload();
+            loadingContent.Unload();
         }
 
 

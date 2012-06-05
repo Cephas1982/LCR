@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace GameStateManagement
+namespace LTR
 {
     /// <summary>
     /// A popup message box screen, used to display "are you sure?"
@@ -54,8 +54,8 @@ namespace GameStateManagement
         /// </summary>
         public MessageBoxScreen(string message, bool includeUsageText)
         {
-            const string usageText = "\nA button, Space, Enter = ok" +
-                                     "\nB button, Esc = cancel"; 
+            const string usageText = "\nA, Space = ok" +
+                                     "\nB , Esc = cancel"; 
             
             if (includeUsageText)
                 this.message = message + usageText;

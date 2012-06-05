@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace LTR//will change to LTR at some point 
+namespace LTR
 {
     /// <summary>
     /// This is the main type for your game
@@ -20,6 +20,7 @@ namespace LTR//will change to LTR at some point
         static Game instance;//singleton so we can access LTR from subclasses
 
         GraphicsDeviceManager graphics;
+        ScreenManager screenManager;
         SpriteBatch spriteBatch;
 
         //temp for testing
@@ -45,6 +46,16 @@ namespace LTR//will change to LTR at some point
 
             //show the mouse
             IsMouseVisible = true;
+
+            // Create the screen manager component.
+            screenManager = new ScreenManager(this);
+
+            Components.Add(screenManager);
+
+            // Activate the first screens.
+            screenManager.AddScreen(new BackgroundScreen(), null);
+            screenManager.AddScreen(new MainMenuScreen(), null);
+
  
         }
 

@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System.IO;
 #endregion
 
-namespace GameStateManagement
+namespace LTR
 {
     /// <summary>
     /// Enum describes the screen transition state.
