@@ -18,7 +18,10 @@ namespace CharacterEditor
 {
     class C_Skeleton : GraphicsDeviceControl
     {
-        //private SpriteBatch m_spriteBatch;
+        private SpriteBatch m_spriteBatch;
+        ContentManager m_content;
+        Texture2D myTexture;
+
         //can assume first bone is the root/head and traverse from there
         List<C_Bone> l_bones = new List<C_Bone>();//todo: might not want to use a list down the road
 //        C_Bone root; //pointer to current root bone (kinda like an iterator)
@@ -75,7 +78,7 @@ namespace CharacterEditor
 
         public void DumpTree()
         {
-            System.IO.StreamWriter writer = new System.IO.StreamWriter("../../../Content/KeyframeData.txt");            
+            System.IO.StreamWriter writer = new System.IO.StreamWriter("../../Content/KeyframeData.txt");            
             for (int i = 0; i < l_bones.Count(); i++)
             {
                 //name, position, positionEnd, length, angle, childCount
@@ -104,6 +107,12 @@ namespace CharacterEditor
 
         protected override void Initialize()
         {
+            //init content
+            m_content = new ContentManager(Services, "CEContent");
+
+            //create spritebatch for textures
+            m_spriteBatch = new SpriteBatch(GraphicsDevice);
+
             //create ortho viewport with standard screen coordinates
             basicEffect = new BasicEffect(GraphicsDevice);
             basicEffect.VertexColorEnabled = true;
@@ -264,6 +273,11 @@ namespace CharacterEditor
             basicEffect.CurrentTechnique.Passes[0].Apply();
             GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineList,
                 m_drawFrame, 0, MAX_CHAR_BONES);           
+
+
+
+
+
         }
 
         public void AddKeyFrame()
@@ -318,7 +332,7 @@ namespace CharacterEditor
             animationList = new List<string>();
 
 
-            System.IO.StreamReader reader = new System.IO.StreamReader("../../../Content/KeyframeData.txt");
+            System.IO.StreamReader reader = new System.IO.StreamReader("../../Content/KeyframeData.txt");
             while(!reader.EndOfStream)
             {
                  C_Bone tempBone = new C_Bone();

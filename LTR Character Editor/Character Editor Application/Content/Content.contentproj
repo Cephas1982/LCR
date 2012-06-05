@@ -42,6 +42,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="head.png">
+      <Name>head</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Content Include="KeyframeData.txt">
       <Name>KeyframeData</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

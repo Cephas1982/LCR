@@ -99,12 +99,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Character Editor WinLibrary\WindowsGameLibrary1.csproj">
-      <Project>{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}</Project>
-      <Name>WindowsGameLibrary1</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
