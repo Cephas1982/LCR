@@ -11,28 +11,33 @@ namespace CharacterEditor
     class C_Bone
     {
 
-        private string m_name;// = new char[30];
-        private Vector3 m_position, m_positionEnd;//bone start positon
+        private string m_name, m_animationName;// bone name, and the animation bone belongs to
+        private Vector3 m_positionStart, m_positionEnd;//bone start positon
         private float m_length, m_angle;//bone length and angle (radians)
         private uint m_childCount;//how many child bones does this bone have?
         public const int MAX_CHILD_BONES = 8;//maximum children
+        private int m_parentNumber;
+        private int m_keyFrame;//which key this bone belongs to
+        
 
-        C_Bone m_parent;//reference to parent
-        C_Bone[] m_children;//reference to children
+        C_Bone m_parent = null;//reference to parent
+        C_Bone[] m_children = null;//reference to children
 
         public C_Bone()
         {
             m_name = "";
-            m_position = Vector3.Zero;
+            m_positionStart = Vector3.Zero;
             m_length = 0;
             m_angle = 0;
             m_childCount = 0;
+            m_parentNumber = -1;
+            m_keyFrame = -1;
 
             m_parent = null;
             m_children = new C_Bone[MAX_CHILD_BONES];
         }
 
-        public string Name
+        public string Name//name of bone
         {
             set
             {
@@ -44,19 +49,55 @@ namespace CharacterEditor
             }
         }
 
+        public string AnimationName//name of animation bone belongs to
+        {
+            set
+            {
+                m_animationName = value;
+            }
+            get
+            {
+                return m_animationName;
+            }
+        }
+
+        public int KeyFrame
+        {
+            set
+            {
+                m_keyFrame = value;
+            }
+            get
+            {
+                return m_keyFrame;
+            }
+        }
+
+        public int ParentNumber
+        {
+            set
+            {
+                m_parentNumber = value;
+            }
+            get
+            {
+                return m_parentNumber;
+            }
+        }
+
         public Vector3 Position
         {
             set
             {
-                m_position = value;
+                m_positionStart = value;
                 m_positionEnd.X = (float)Math.Cos(m_angle) * m_length;//get end point X value
                 m_positionEnd.Y = (float)Math.Sin(m_angle) * m_length;//get Y
 
-                m_positionEnd += m_position;
+                m_positionEnd += m_positionStart;
             }
             get
             {
-                return m_position;
+                return m_positionStart;
             }
         }
 
@@ -70,7 +111,7 @@ namespace CharacterEditor
             {
                 m_positionEnd.X = (float)Math.Cos(m_angle) * m_length;//get end point X value
                 m_positionEnd.Y = (float)Math.Sin(m_angle) * m_length;//get Y
-                m_positionEnd += m_position;
+                m_positionEnd += m_positionStart;
 
                 return m_positionEnd;
             }

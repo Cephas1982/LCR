@@ -9,11 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTR Map Editor", "LTR Map E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTR Map EditorContent", "LTR Map Editor\LTR Map EditorContent\LTR Map EditorContent.contentproj", "{441E04CB-95AF-4D35-B032-1ABDED2F0006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharacterEditor", "LTR Character Editor\WindowsFormsApplication1\CharacterEditor.csproj", "{809B3E66-EB21-464C-8447-A5CE51C1CB35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharacterEditor", "LTR Character Editor\Character Editor Application\CharacterEditor.csproj", "{809B3E66-EB21-464C-8447-A5CE51C1CB35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsGameLibrary1", "LTR Character Editor\WindowsGameLibrary1\WindowsGameLibrary1.csproj", "{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}"
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "CEContent", "LTR Character Editor\CharacterEditiorContent\CEContent.contentproj", "{AC4EDAC0-5DD1-41C7-89FD-39870A59A3F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Character Editor Content", "LTR Character Editor\Content1\Character Editor Content.contentproj", "{A7A0E247-EAF2-4DF2-B798-D39FEE9D6E2E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharacterEditor_ContentLibrary", "LTR Character Editor\CharacterEditor_ContentLibrary\CharacterEditor_ContentLibrary.csproj", "{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,16 +49,16 @@ Global
 		{809B3E66-EB21-464C-8447-A5CE51C1CB35}.Release|Any CPU.ActiveCfg = Release|x86
 		{809B3E66-EB21-464C-8447-A5CE51C1CB35}.Release|x86.ActiveCfg = Release|x86
 		{809B3E66-EB21-464C-8447-A5CE51C1CB35}.Release|x86.Build.0 = Release|x86
-		{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}.Debug|x86.ActiveCfg = Debug|x86
-		{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}.Debug|x86.Build.0 = Debug|x86
-		{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}.Release|Any CPU.ActiveCfg = Release|x86
-		{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}.Release|x86.ActiveCfg = Release|x86
-		{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}.Release|x86.Build.0 = Release|x86
-		{A7A0E247-EAF2-4DF2-B798-D39FEE9D6E2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7A0E247-EAF2-4DF2-B798-D39FEE9D6E2E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A7A0E247-EAF2-4DF2-B798-D39FEE9D6E2E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7A0E247-EAF2-4DF2-B798-D39FEE9D6E2E}.Release|x86.ActiveCfg = Debug|Any CPU
+		{AC4EDAC0-5DD1-41C7-89FD-39870A59A3F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC4EDAC0-5DD1-41C7-89FD-39870A59A3F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC4EDAC0-5DD1-41C7-89FD-39870A59A3F5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC4EDAC0-5DD1-41C7-89FD-39870A59A3F5}.Release|x86.ActiveCfg = Debug|Any CPU
+		{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}.Debug|x86.ActiveCfg = Debug|x86
+		{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}.Debug|x86.Build.0 = Debug|x86
+		{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}.Release|Any CPU.ActiveCfg = Release|x86
+		{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}.Release|x86.ActiveCfg = Release|x86
+		{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

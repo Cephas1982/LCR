@@ -132,8 +132,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LTRContent\LTRContent.contentproj">
-      <Name>LTRContent</Name>
+      <Name>LTRContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{04219C22-4814-4A0E-98C6-420AE335F494}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -100,9 +100,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WindowsGameLibrary1\WindowsGameLibrary1.csproj">
-      <Project>{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}</Project>
-      <Name>CE_WindowsGameLibrary</Name>
+    <ProjectReference Include="..\CharacterEditor_ContentLibrary\CharacterEditor_ContentLibrary.csproj">
+      <Project>{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}</Project>
+      <Name>CharacterEditor_ContentLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

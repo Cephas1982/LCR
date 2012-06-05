@@ -119,8 +119,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LTR Map EditorContent\LTR Map EditorContent.contentproj">
-      <Name>LTR_Map_EditorContent</Name>
+      <Name>LTR Map EditorContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{441E04CB-95AF-4D35-B032-1ABDED2F0006}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

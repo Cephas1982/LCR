@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace WindowsGameLibrary1
+namespace CharacterEditor_ContentBuilder
 {
     public class Class1
     {

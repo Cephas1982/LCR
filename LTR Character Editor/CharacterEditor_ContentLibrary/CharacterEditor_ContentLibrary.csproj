@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{8DC125C7-E616-4E59-BAB0-A61AAB9ABE73}</ProjectGuid>
+    <ProjectGuid>{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsGameLibrary1</RootNamespace>
-    <AssemblyName>WindowsGameLibrary1</AssemblyName>
+    <RootNamespace>CharacterEditor_ContentBuilder</RootNamespace>
+    <AssemblyName>CharacterEditor_ContentBuilder</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>HiDef</XnaProfile>
-    <XnaCrossPlatformGroupID>8302b553-6f7b-4c91-b4f9-4e1458191707</XnaCrossPlatformGroupID>
+    <XnaProfile>Reach</XnaProfile>
+    <XnaCrossPlatformGroupID>17d0c57b-cde1-408d-9b5b-0e682850e448</XnaCrossPlatformGroupID>
     <XnaOutputType>Library</XnaOutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -96,9 +96,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Content1\Character Editor Content.contentproj">
-      <Project>{A7A0E247-EAF2-4DF2-B798-D39FEE9D6E2E}</Project>
-      <Name>Character Editor Content</Name>
+    <ProjectReference Include="..\CharacterEditiorContent\CEContent.contentproj">
+      <Project>{AC4EDAC0-5DD1-41C7-89FD-39870A59A3F5}</Project>
+      <Name>CEContent %28CharacterEditiorContent%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
