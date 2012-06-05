@@ -12,7 +12,7 @@ namespace CharacterEditor
     {
 
         private string m_name, m_animationName;// bone name, and the animation bone belongs to
-        private Vector3 m_position, m_positionEnd;//bone start positon
+        private Vector3 m_positionStart, m_positionEnd;//bone start positon
         private float m_length, m_angle;//bone length and angle (radians)
         private uint m_childCount;//how many child bones does this bone have?
         public const int MAX_CHILD_BONES = 8;//maximum children
@@ -26,7 +26,7 @@ namespace CharacterEditor
         public C_Bone()
         {
             m_name = "";
-            m_position = Vector3.Zero;
+            m_positionStart = Vector3.Zero;
             m_length = 0;
             m_angle = 0;
             m_childCount = 0;
@@ -89,15 +89,15 @@ namespace CharacterEditor
         {
             set
             {
-                m_position = value;
+                m_positionStart = value;
                 m_positionEnd.X = (float)Math.Cos(m_angle) * m_length;//get end point X value
                 m_positionEnd.Y = (float)Math.Sin(m_angle) * m_length;//get Y
 
-                m_positionEnd += m_position;
+                m_positionEnd += m_positionStart;
             }
             get
             {
-                return m_position;
+                return m_positionStart;
             }
         }
 
@@ -111,7 +111,7 @@ namespace CharacterEditor
             {
                 m_positionEnd.X = (float)Math.Cos(m_angle) * m_length;//get end point X value
                 m_positionEnd.Y = (float)Math.Sin(m_angle) * m_length;//get Y
-                m_positionEnd += m_position;
+                m_positionEnd += m_positionStart;
 
                 return m_positionEnd;
             }

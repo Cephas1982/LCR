@@ -99,6 +99,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CharacterEditor_ContentLibrary\CharacterEditor_ContentLibrary.csproj">
+      <Project>{878C83FB-75AF-4E9A-A3A6-59F0444DB9D4}</Project>
+      <Name>CharacterEditor_ContentLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

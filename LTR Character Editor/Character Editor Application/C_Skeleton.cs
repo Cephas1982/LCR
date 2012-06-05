@@ -20,7 +20,7 @@ namespace CharacterEditor
     {
         private SpriteBatch m_spriteBatch;
         ContentManager m_content;
-        Texture2D myTexture;
+        Texture2D myTexture, texture_torso;
 
         //can assume first bone is the root/head and traverse from there
         List<C_Bone> l_bones = new List<C_Bone>();//todo: might not want to use a list down the road
@@ -37,23 +37,25 @@ namespace CharacterEditor
         private int[] i_keyFrame;//keyframe index
         public float[] i_animationTimer;// index --- load from file
 
-        private float time;
+        private Vector3 m_worldPosition;
+
+        //must use this for timing. cannot rely on xna gameTimer when imbedded into winforms
+        Stopwatch timer;
         private float elapsedAnimationTime;
         private float currentTime;
         private bool m_loopAnimation = false;
 
-        //must use this for timing. cannot rely on xna gameTimer when imbedded into winforms
-        Stopwatch timer;
+        
         
         public int selectedBone;//for the editor! if bone is selected it will be stored here
         public int selectedBoneAngle;//stores angle of currently selected bone
         public int selectedBoneIndex;//stores which keyframe the bone belongs to
         public float animationSpeed = 3;//how fast animation plays  TODO/////////////// get rid of this and set animation speed for each keyframe
         public List<string> animationList;//stores unique animation values
-
-        public enum e_AnimationState { PLAY, STOP};
+        public enum e_AnimationState { PLAY=0, STOP=1};
         private int m_animationState = (int)e_AnimationState.STOP;
 
+        //Contructor
         public C_Skeleton()
         {
 
@@ -113,6 +115,9 @@ namespace CharacterEditor
             //create spritebatch for textures
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            myTexture = m_content.Load<Texture2D>("head");
+            texture_torso = m_content.Load<Texture2D>("torso");
+
             //create ortho viewport with standard screen coordinates
             basicEffect = new BasicEffect(GraphicsDevice);
             basicEffect.VertexColorEnabled = true;
@@ -122,7 +127,7 @@ namespace CharacterEditor
                  0, 1);   //near, far
 
             timer = Stopwatch.StartNew();
-            time = 0;
+            
 
             //will load assets here b/c Update() is part of Game class ( not used in winforms)
             Load();
@@ -136,30 +141,18 @@ namespace CharacterEditor
             LoadKeyFrames();//hard coded vertices. Will eventually load from file....gary
 
             
-
-            i_animationTimer = new float[vertices.Length / (MAX_CHAR_BONES * 2)];//todo needeD????
             //will load from file, testing w/hardcoding now
+            i_animationTimer = new float[vertices.Length / (MAX_CHAR_BONES * 2)];//stores animation speed for each keyframe
             i_animationTimer[0] = animationSpeed;//going from key0 to key1 should take 2 seconds  TODO: better variable name? TODO: FIX THIS
 
-            m_drawFrame = new VertexPositionColor[MAX_CHAR_BONES * 2];//this is the final positon of the model for the current buffer     
+            m_drawFrame = new VertexPositionColor[MAX_CHAR_BONES * 2];//this is the final positon of the model for the current buffer   
+            m_worldPosition = new  Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2 - 100, 0);//set position
 
         }
 
         public new void Update()
         {
-            Vector3 moveSpeed = new Vector3(0, 0, 0);
-            if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
-            {
-                time = 0;
-                m_keyFrame = 1;
-            }
-            if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
-            {
-                time = 0;
-                m_keyFrame = 0;
-            }
-       
-            
+
             Play(m_animationState, m_keyFrame, m_keyFrame_start, m_keyFrame_end, m_loopAnimation);
   
         }
@@ -200,13 +193,13 @@ namespace CharacterEditor
                 for (int i = 0; i < MAX_CHAR_BONES * 2; i++)
                 {
                     m_drawFrame[i].Position = Vector3.Lerp(vertices[i + i_keyFrame[m_keyFrame]].Position, vertices[i + i_keyFrame[m_keyFrame + 1]].Position, lerpTime);
-                    m_drawFrame[i].Position = Vector3.Transform(m_drawFrame[i].Position, Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2 - 100, 0)));
+                    m_drawFrame[i].Position = Vector3.Transform(m_drawFrame[i].Position, Matrix.CreateTranslation(m_worldPosition));
                 }
             if (m_animationState == (int)e_AnimationState.STOP)//stop state
                 for (int i = 0; i < MAX_CHAR_BONES * 2; i++)
                 {
                     m_drawFrame[i].Position = vertices[i + i_keyFrame[m_keyFrame]].Position;
-                    m_drawFrame[i].Position = Vector3.Transform(m_drawFrame[i].Position, Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2 - 100, 0)));
+                    m_drawFrame[i].Position = Vector3.Transform(m_drawFrame[i].Position, Matrix.CreateTranslation(m_worldPosition));
                 }
            
         }
@@ -226,6 +219,7 @@ namespace CharacterEditor
                     l_bones[(selectedBoneIndex * MAX_CHAR_BONES) + selectedBone].Angle = MathHelper.ToRadians(value);
             }
         }
+
         public int KeyFrame
         {
             get
@@ -262,22 +256,49 @@ namespace CharacterEditor
 
             selectedBoneAngle = (int)MathHelper.ToDegrees(l_bones[i_keyFrame[0] + selectedBone].Angle);//TODO!!!!!!!!!!!! check selected keyframe in editor when returning this value
 
-
-
-            time += (float)timer.Elapsed.Milliseconds /(1000 * 60);
-            Update();//Udate function will be called here since winforms cannot use xna.Game.Update                
+            //Update function will be called here since winforms cannot use xna.Game.Update  
+            Update();              
             
     
             //Drawing happens here
             GraphicsDevice.Clear(Color.CornflowerBlue);//background color
             basicEffect.CurrentTechnique.Passes[0].Apply();
             GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineList,
-                m_drawFrame, 0, MAX_CHAR_BONES);           
+                m_drawFrame, 0, MAX_CHAR_BONES);
 
+            #region TEXTURES!!!
+            //Render texture over character/////////////////////////////////////////
+            /*
+            float lerpTime = 0;
+            int nextFrame = m_keyFrame;
+            if (m_animationState == (int)e_AnimationState.PLAY)
+            {
+                lerpTime = elapsedAnimationTime * i_animationTimer[0];
+                if (nextFrame == m_keyFrame_end)
+                    nextFrame = m_keyFrame_start;
 
+            }
+            else
+            {
+                nextFrame = m_keyFrame_end - 1;
+            }
+                Rectangle head = new Rectangle((int)m_worldPosition.X, (int)m_worldPosition.Y, 50, 50);
+                float angle1 = l_bones[m_keyFrame * MAX_CHAR_BONES].Angle;
+                float angle2 = l_bones[(nextFrame + 1) * MAX_CHAR_BONES].Angle;//get 2nd angle
+                float lerpVal = MathHelper.Lerp(angle1, angle2, lerpTime);
+                Rectangle torso = new Rectangle((int)l_bones[m_keyFrame * MAX_CHAR_BONES + 5].Position.X + (int)m_worldPosition.X, 
+                    (int)l_bones[m_keyFrame * MAX_CHAR_BONES + 5].Position.Y + (int)m_worldPosition.Y, 100, 100);
 
+                float angle3 = l_bones[m_keyFrame * MAX_CHAR_BONES + 5].Angle;
+                float angle4 = l_bones[(nextFrame + 1) * MAX_CHAR_BONES + 5].Angle;//get 2nd angle
+                float lerpVal2 = MathHelper.Lerp(angle3, angle4, lerpTime);
 
-
+            m_spriteBatch.Begin();
+            m_spriteBatch.Draw(myTexture, head, null, Color.White, lerpVal, new Vector2(0, myTexture.Height / 2), SpriteEffects.None, 0);
+            m_spriteBatch.Draw(texture_torso, torso, null, Color.White, lerpVal2, new Vector2(0, texture_torso.Height / 2), SpriteEffects.None, 0);
+            m_spriteBatch.End();
+            */
+            #endregion
         }
 
         public void AddKeyFrame()
