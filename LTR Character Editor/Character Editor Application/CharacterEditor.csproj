@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="C_Animation.cs" />
     <Compile Include="C_Bone.cs" />
     <Compile Include="C_Keyframe.cs" />
     <Compile Include="C_Skeleton.cs">
